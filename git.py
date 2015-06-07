@@ -19,7 +19,7 @@ class cd:
 # TODO use same context for all methods
 class git:
     """Minimal git wrapper, providing only funtions to init add and commit."""
-    def __init__(path):
+    def __init__(self, path):
         assert os.path.isabs(path)
         self.path = path
 
