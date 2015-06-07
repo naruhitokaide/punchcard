@@ -7,6 +7,8 @@ import arrow
 import click
 import subprocess
 
+from git import git
+
 
 @click.group()
 @click.version_option(version=__version__)
@@ -20,38 +22,11 @@ def cli():
 @click.option('--location', default='.', type=click.Path(),
     help='Location of the git project, which will be created')
 def random(min, max, location):
+    # find better names for min and max to avoid shadowing built in functions
     click.echo('random: ' + ' '.join([str(min), str(max), location]))
-    git_init(location)
-
-
-def git_init(path):
-    assert os.path.isabs(path)
-    click.echo('git init: ' + path)
-    with cd(path):
-        subprocess.call('git init')
-
-
-def git_add(filenames):
-    for filename in filenames:
-        assert os.path.isfile(filename)  # needs entire path
-        subprocess.call('git add ' + filename)
-
-def git_commit(date):
-    click.echo('git commit: ' + date)
-    subprocess.call("git commit -m '' ")
-
-
-class cd:
-    """Context manager for changing the current working directory"""
-    def __init__(self, newPath):
-        self.newPath = os.path.expanduser(newPath)
-
-    def __enter__(self):
-        self.savedPath = os.getcwd()
-        os.chdir(self.newPath)
-
-    def __exit__(self, etype, value, traceback):
-        os.chdir(self.savedPath)
+    # TODO use either relative or absolute path, but pass only abs path
+    random_git = git(location)
+    random_git.init()
 
 
 if __name__ == '__main__':
