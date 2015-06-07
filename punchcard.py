@@ -31,6 +31,11 @@ def git_init(path):
         subprocess.call('git init')
 
 
+def git_add(filenames):
+    for filename in filenames:
+        assert os.path.isfile(filename)  # needs entire path
+        subprocess.call('git add ' + filename)
+
 def git_commit(date):
     click.echo('git commit: ' + date)
     subprocess.call("git commit -m '' ")
