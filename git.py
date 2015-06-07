@@ -16,6 +16,7 @@ class cd:
         os.chdir(self.previous_path)
 
 
+# TODO use same context for all methods
 class git:
     """Minimal git wrapper, providing only funtions to init add and commit."""
     def __init__(path):
