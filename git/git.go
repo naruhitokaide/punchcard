@@ -1,21 +1,19 @@
 package git
 
 import (
-	"fmt"
+	"log"
+	"os"
 	"os/exec"
 	"path/filepath"
 )
 
 func Init(path string) {
+	log.Println("Entering git init with path: " + path)
 	if !filepath.IsAbs(path) {
-		fmt.Println("Path must be absolute. Given path was: " + path)
-		return
+		log.Fatal("Path must be absolute. Given path was: " + path)
 	}
-	cd := exec.Command("cd", path)
-	init := exec.Command("git", "init")
-
-	cd.Run()
-	init.Run()
+	os.Chdir(path)
+	exec.Command("git", "init").Run()
 }
 
 func Add() {
