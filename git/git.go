@@ -4,16 +4,15 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"path/filepath"
 )
 
 func Init(path string) {
-	log.Println("Entering git init with path: " + path)
-	if !filepath.IsAbs(path) {
-		log.Fatal("Path must be absolute. Given path was: " + path)
+	log.Println("calling init with " + path)
+	if err := os.MkdirAll(path, 0777); err != nil {
+		log.Fatal(err)
 	}
-	os.Chdir(path)
-	exec.Command("git", "init").Run()
+	log.Println("git init " + path)
+	exec.Command("git", "init", path).Run()
 }
 
 func Add() {
