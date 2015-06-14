@@ -7,12 +7,13 @@ import (
 )
 
 func Init(path string) {
-	log.Println("calling init with " + path)
-	if err := os.MkdirAll(path, 0777); err != nil {
+	if err := os.MkdirAll(path, os.ModeDir); err != nil {
 		log.Fatal(err)
 	}
-	log.Println("git init " + path)
-	exec.Command("git", "init", path).Run()
+	err := exec.Command("git", "init", path).Run()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func Add() {
