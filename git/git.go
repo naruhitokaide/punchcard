@@ -16,8 +16,18 @@ func Init(path string) {
 	}
 }
 
-func Add() {
+func Add(path, filename string) {
+	os.Chdir(path)
+	err := exec.Command("git", "add", filename).Run()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
-func Commit() {
+func Commit(path, message, date string) {
+	os.Chdir(path)
+	err := exec.Command("git", "commit", "-m", message, "--date", date).Run()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
