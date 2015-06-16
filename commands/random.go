@@ -2,6 +2,7 @@ package commands
 
 import (
 	"fmt"
+	"github.com/0xfoo/punchcard/schedulers"
 	"github.com/spf13/cobra"
 )
 
@@ -18,8 +19,7 @@ This will be done for the past 365 days and the commits are in the range of
 }
 
 func randomRun(cmd *cobra.Command, args []string) {
-	// TODO replace with actual function
-	fmt.Println(Location)
+	schedulers.RandomSchedule()
 }
 
 func init() {
