@@ -2,7 +2,7 @@ package commands
 
 import (
 	"fmt"
-	"github.com/0xfoo/punchcard/schedulers"
+	"github.com/0xfoo/punchcard/schedule"
 	"github.com/spf13/cobra"
 )
 
