@@ -47,3 +47,4 @@ func TestGetDayLastYear(t *testing.T) {
 	}
 }
 
+// TODO add test cases for getDaysSinceThisDayLastYear and getRandomNumber
