@@ -25,7 +25,30 @@ func getRandomNumber(min, max int) int {
 
 // getDaysSinceThisDayLastYear returns a slice of days since todays date
 // last year. E.g. 01.01.2015 starts at the 01.01.2014.
-// Every day maps to itself minus one year except the 29.02 will map to 28.02.
-func getDaysSinceThisDayLastYear() []time.Date {
-	return
+func getDaysSinceThisDayLastYear() []time.Time {
+	daysSinceThisDayLastYear := make([]time.Time)
+	now := time.Now()
+	day := getDayLastYear(now)
+	for day <= now {
+		daysSinceThisDayLastYear.append(day)
+		day = day.AddDate(0, 0, 1)
+	}
+	return daysSinceThisDayLastYear
+}
+
+// getDayLastYear returns the daya date minus one year, except the
+// 29.02 will map to 28.02.
+func getDayLastYear(day time.Time) time.Time {
+	if isLeapDay(day) {
+		// adjust for one year and one day
+		return day.AddDate(-1, 0, -1)
+	} else {
+		return day.AddDate(-1, 0, 0)
+	}
+}
+
+// isLeapDay checks if a given datetime is the 29.02 or not.
+func isLeapDay(today time.Time) bool {
+	_, month, day := today.Date()
+	return (day == 29 && month == 2)
 }
