@@ -23,4 +23,27 @@ func TestIsLeapYear(t *testing.T) {
 		}
 	}
 }
-// TODO add test cases for time parsing
+
+func TestGetDayLastYear(t *testing.T) {
+	var tests = []struct {
+		date     time.Time
+		expected bool
+	}{
+		{time.Date(2009, time.November, 10, 0, 0, 0, 0, time.UTC),
+			time.Date(2008, time.November, 10, 0, 0, 0, 0, time.UTC)},
+		{time.Date(2016, time.February, 28, 0, 0, 0, 0, time.UTC),
+			time.Date(2015, time.February, 28, 0, 0, 0, 0, time.UTC)},
+		{time.Date(2016, time.February, 29, 0, 0, 0, 0, time.UTC),
+			time.Date(2015, time.February, 28, 0, 0, 0, 0, time.UTC)},
+		{time.Date(2012, time.February, 29, 0, 0, 0, 0, time.UTC),
+			time.Date(2011, time.February, 28, 0, 0, 0, 0, time.UTC)},
+	}
+	for _, test := range tests {
+		actual := getDayLastYear(test.date)
+		if actual != test.expected {
+			fmt := "getDayLastYear(%v) == %v; but wanted %v"
+			t.Errorf(fmt, test.date, actual, test.expected)
+		}
+	}
+}
+
