@@ -50,5 +50,5 @@ func getDayLastYear(day time.Time) time.Time {
 // isLeapDay checks if a given datetime is the 29.02 or not.
 func isLeapDay(today time.Time) bool {
 	_, month, day := today.Date()
-	return (day == 29 && month == 2)
+	return (day == 29 && month == time.February)
 }
