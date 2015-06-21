@@ -5,7 +5,7 @@ import (
 )
 
 type Commit struct {
-	dateTime time.Date
+	dateTime time.Time
 	message  string
 }
 
