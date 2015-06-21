@@ -27,7 +27,7 @@ func TestIsLeapYear(t *testing.T) {
 func TestGetDayLastYear(t *testing.T) {
 	var tests = []struct {
 		date     time.Time
-		expected bool
+		expected time.Time
 	}{
 		{time.Date(2009, time.November, 10, 0, 0, 0, 0, time.UTC),
 			time.Date(2008, time.November, 10, 0, 0, 0, 0, time.UTC)},
