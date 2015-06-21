@@ -6,10 +6,13 @@ import (
 	"os/exec"
 )
 
+// permission to create a directory and read/write in it
+const PERM = 0755
+
 // Init initializes a git repo in the given path.
 // If the path does not already exists, it will be created.
 func Init(path string) {
-	if err := os.MkdirAll(path, os.ModeDir); err != nil {
+	if err := os.MkdirAll(path, PERM); err != nil {
 		log.Fatal(err)
 	}
 	err := exec.Command("git", "init", path).Run()
