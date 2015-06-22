@@ -1,6 +1,7 @@
 package schedule
 
 import (
+	"fmt"
 	"math/rand"
 	"time"
 )
@@ -9,9 +10,10 @@ import (
 // These commits will be created in the location specified in the command.
 func RandomSchedule(min, max int) {
 
-	days := getDaysSinceThisDayLastYear()
+	days := getDaysSinceDateMinusOneYear(time.Now())
 	for day := range days {
 		rnd := getRandomNumber(min, max)
+		fmt.Println("%v - %d", day, rnd)
 		// save into structure representing the commits over the last year
 		// start worker, which will execute all commits using some sort of
 		// commit generator
@@ -20,17 +22,19 @@ func RandomSchedule(min, max int) {
 
 // getRandomNumber returns a number in the range of min and max.
 func getRandomNumber(min, max int) int {
+	if min == max {
+		return min
+	}
 	return rand.Intn(max-min) + min
 }
 
-// getDaysSinceThisDayLastYear returns a slice of days since todays date
+// getDaysSinceDateMinusOneYear returns a slice of days since the given date
 // last year. E.g. 01.01.2015 starts at the 01.01.2014.
-func getDaysSinceThisDayLastYear() chan time.Time {
+func getDaysSinceDateMinusOneYear(givenDate time.Time) chan time.Time {
 	dayChannel := make(chan time.Time)
 	go func() {
-		now := time.Now()
-		day := getDayLastYear(now)
-		for day <= now {
+		day := getDayMinusOneYear(givenDate)
+		for givenDate.After(day) {
 			dayChannel <- day
 			day = day.AddDate(0, 0, 1)
 		}
@@ -39,9 +43,9 @@ func getDaysSinceThisDayLastYear() chan time.Time {
 	return dayChannel
 }
 
-// getDayLastYear returns the daya date minus one year, except the
+// getDayMinusOneYear returns the daya date minus one year, except the
 // 29.02 will map to 28.02.
-func getDayLastYear(day time.Time) time.Time {
+func getDayMinusOneYear(day time.Time) time.Time {
 	if isLeapDay(day) {
 		// adjust for one year and one day
 		return day.AddDate(-1, 0, -1)
