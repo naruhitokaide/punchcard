@@ -18,6 +18,7 @@ func RandomCommits(day time.Time, rnd int) chan Commit {
 				dateTime: getRandomTime(), message: getRandomCommitMessage(),
 			}
 		}
+		close(commitChannel)
 	}()
 	return commitChannel
 }
