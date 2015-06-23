@@ -72,17 +72,22 @@ func TestGetDaysSinceDateMinusOneYear(t *testing.T) {
 		date           time.Time
 		expectedLength int
 	}{
-		{time.Date(2009, time.November, 10, 0, 0, 0, 0, time.UTC), 365},
-		{time.Date(2016, time.February, 28, 0, 0, 0, 0, time.UTC), 365},
-		{time.Date(2016, time.February, 29, 0, 0, 0, 0, time.UTC), 366},
-		{time.Date(2012, time.February, 29, 0, 0, 0, 0, time.UTC), 366},
+		{time.Date(2009, time.November, 10, 0, 0, 0, 0, time.UTC), 366},
+		{time.Date(2016, time.February, 28, 0, 0, 0, 0, time.UTC), 366},
+		{time.Date(2016, time.February, 29, 0, 0, 0, 0, time.UTC), 367},
+		{time.Date(2013, time.February, 28, 0, 0, 0, 0, time.UTC), 367},
 	}
 	for _, test := range tests {
-		// TODO how to get the size of a channel
 		actual := getDaysSinceDateMinusOneYear(test.date)
-		if len(actual) == test.expectedLength {
-			fmt := "getDaysSinceDateMinusOneYear(%v) == %d; but wanted %d"
-			t.Errorf(fmt, test.date, len(actual), test.expectedLength)
+		length := 0
+		for day := range actual {
+			// just logging so day is used here, otherwise it wouldn't compile
+			t.Log(day.String())
+			length++
+		}
+		if length != test.expectedLength {
+			fmt := "len(getDaysSinceDateMinusOneYear(%v)) == %d; but wanted %d"
+			t.Errorf(fmt, test.date, length, test.expectedLength)
 		}
 	}
 }
