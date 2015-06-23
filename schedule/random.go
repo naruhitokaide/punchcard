@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// RandomSchedule creates random commits over the past 365 days.
+// RandomSchedule creates random commits over the past 365/366 days.
 // These commits will be created in the location specified in the command.
 func RandomSchedule(min, max int) {
 
@@ -29,7 +29,7 @@ func getRandomNumber(min, max int) int {
 }
 
 // getDaysSinceDateMinusOneYear returns a slice of days since the given date
-// last year. E.g. 01.01.2015 starts at the 01.01.2014.
+// minus one year. E.g. 01.01.2015 starts at the 01.01.2014.
 func getDaysSinceDateMinusOneYear(givenDate time.Time) chan time.Time {
 	dayChannel := make(chan time.Time)
 	go func() {
@@ -38,6 +38,8 @@ func getDaysSinceDateMinusOneYear(givenDate time.Time) chan time.Time {
 			dayChannel <- day
 			day = day.AddDate(0, 0, 1)
 		}
+		// also add the givenDate, which will not be added using After()
+		dayChannel <- givenDate
 		close(dayChannel)
 	}()
 	return dayChannel
