@@ -23,3 +23,5 @@ func TestGetRandomNumber(t *testing.T) {
 		}
 	}
 }
+
+// TODO test random commit message and random time
