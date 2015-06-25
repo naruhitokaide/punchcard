@@ -4,6 +4,7 @@ import (
 	"github.com/0xfoo/punchcard/git"
 	"io/ioutil"
 	"math/rand"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -17,8 +18,7 @@ func RandomSchedule(min, max int, location string) {
 		rnd := getRandomNumber(min, max)
 		commits := RandomCommits(day, rnd)
 		for commit := range commits {
-			// TODO git add and commit file with given
-			filename := "filename"
+			filename := strconv.Itoa(time.Now().Nanosecond())
 			git.Add(location, filename)
 			git.Commit(location, commit.message, commit.dateTime.String())
 		}
@@ -32,7 +32,7 @@ func RandomCommits(day time.Time, rnd int) chan Commit {
 		for i := 0; i < rnd; i++ {
 			commitChannel <- Commit{
 				dateTime: getRandomTime(day),
-				message:  getRandomCommitMessage(),
+				message:  getRandomCommitMessage(8),
 			}
 		}
 		close(commitChannel)
@@ -48,10 +48,10 @@ func getRandomTime(day time.Time) time.Time {
 	return day.Add(hours + minutes + seconds)
 }
 
-func getRandomCommitMessage() string {
+func getRandomCommitMessage(length int) string {
 	content, _ := ioutil.ReadFile(COMMIT_MESSAGE_BASE)
 	words := strings.Split(string(content), " ")
-	return getRandomWords(words, getRandomNumber(4, 8))
+	return getRandomWords(words, getRandomNumber(1, length))
 }
 
 // getRandomNumber returns a number in the range of min and max.
@@ -62,10 +62,10 @@ func getRandomNumber(min, max int) int {
 	return rand.Intn(max-min) + min
 }
 
-func getRandomWords(words []string, numberOfWords int) string {
-	rndWords := make([]string, numberOfWords)
-	for i := 0; i < numberOfWords; i++ {
-		rndWords = append(rndWords, words(getRandomNumber(0, len(words))))
+func getRandomWords(inWords []string, numWords int) string {
+	outWords := make([]string, numWords)
+	for i := 0; i < numWords; i++ {
+		outWords = append(outWords, inWords[getRandomNumber(0, len(inWords))])
 	}
-	return strings.Join(rndWords, " ")
+	return strings.Join(outWords, " ")
 }
