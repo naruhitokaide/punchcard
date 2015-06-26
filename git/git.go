@@ -24,19 +24,23 @@ func Init(path string) {
 // Add wraps the git add call and will change into the path of the git repo
 // and add the file given by name.
 func Add(path, filename string) {
+	currentDir, _ := os.Getwd()
 	os.Chdir(path)
 	err := exec.Command("git", "add", filename).Run()
 	if err != nil {
 		log.Fatal(err)
 	}
+	os.Chdir(currentDir)
 }
 
 // Commit will change into the path of the git repo and execute git commit.
 // In addition a message and date for the commit are specified.
 func Commit(path, message, date string) {
+	currentDir, _ := os.Getwd()
 	os.Chdir(path)
 	err := exec.Command("git", "commit", "-m", message, "--date", date).Run()
 	if err != nil {
 		log.Fatal(err)
 	}
+	os.Chdir(currentDir)
 }
