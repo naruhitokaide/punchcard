@@ -61,7 +61,8 @@ func exists(path string) bool {
 
 func createTestFile() string {
 	testFile := filepath.Join(getTestDir(), TESTFILE)
-	os.Create(testFile)
+	file, _ := os.Create(testFile)
+	file.Close()
 	return testFile
 }
 
