@@ -4,6 +4,8 @@ import (
 	"github.com/0xfoo/punchcard/git"
 	"io/ioutil"
 	"math/rand"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -18,7 +20,7 @@ func RandomSchedule(min, max int, location string) {
 		rnd := getRandomNumber(min, max)
 		commits := RandomCommits(day, rnd)
 		for commit := range commits {
-			filename := strconv.Itoa(time.Now().Nanosecond())
+			filename := createFileInDir(location)
 			git.Add(location, filename)
 			git.Commit(location, commit.message, commit.dateTime.String())
 		}
@@ -48,6 +50,7 @@ func getRandomTime(day time.Time) time.Time {
 	return day.Add(hours + minutes + seconds)
 }
 
+// getRandomCommitMessage returns a commit message, no longer than length
 func getRandomCommitMessage(length int) string {
 	content, _ := ioutil.ReadFile(COMMIT_MESSAGE_BASE)
 	words := strings.Split(string(content), " ")
@@ -62,10 +65,20 @@ func getRandomNumber(min, max int) int {
 	return rand.Intn(max-min) + min
 }
 
+// getRandomWords returns numWords random elements of the input []string
 func getRandomWords(inWords []string, numWords int) string {
 	outWords := make([]string, numWords)
 	for i := 0; i < numWords; i++ {
 		outWords = append(outWords, inWords[getRandomNumber(0, len(inWords))])
 	}
-	return strings.Join(outWords, " ")
+	return strings.TrimSpace(strings.Join(outWords, " "))
+}
+
+// createFileWithTimeStamp creates a file with the current nano seconds as the
+// file name, and returns this time stamp (i.e. filename)
+func createFileInDir(dir string) string {
+	filename := strconv.Itoa(time.Now().Nanosecond())
+	file, _ := os.Create(filepath.Join(dir, filename))
+	file.Close()
+	return filename
 }
