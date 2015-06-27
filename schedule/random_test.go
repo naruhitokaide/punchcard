@@ -1,9 +1,6 @@
 package schedule
 
 import (
-	"bufio"
-	"os"
-	"path/filepath"
 	"strings"
 	"testing"
 	"time"
@@ -78,16 +75,6 @@ func TestGetRandomTime(t *testing.T) {
 	}
 }
 
-func TestCreateFileInDir(t *testing.T) {
-	testDir := "testDir"
-	os.MkdirAll(testDir, 0755)
-	filename := createFileInDir(testDir)
-	if _, err := os.Stat(filepath.Join(testDir, filename)); os.IsNotExist(err) {
-		t.Errorf("Expected file (%s) to be created", filename)
-	}
-	os.RemoveAll(testDir)
-}
-
 func TestRandomCommits(t *testing.T) {
 	var tests = []struct {
 		date       time.Time
@@ -99,7 +86,7 @@ func TestRandomCommits(t *testing.T) {
 	}
 	messageBase := getMessageBase()
 	for _, test := range tests {
-		actual := RandomCommits(test.date, test.numCommits, messageBase)
+		actual := generateRandomCommits(test.date, test.numCommits, messageBase)
 		commitCount := 0
 		for commit := range actual {
 			if commit.dateTime.Day() != test.date.Day() {
@@ -113,38 +100,47 @@ func TestRandomCommits(t *testing.T) {
 	}
 }
 
-func XTestRandomSchedule(t *testing.T) {
+func TestRandomSchedule(t *testing.T) {
 	var tests = []struct {
-		min      int
-		max      int
-		location string
+		min int
+		max int
 	}{
-		{1, 1, "testWithOneCommit"},
-		{2, 8, "testWithUpToEightCommits"},
-		// {10, 100, "testWithUpToOneHundredCommits"},
+		{1, 1}, {2, 8}, {10, 100},
 	}
 	for _, test := range tests {
-		currentDir, _ := os.Getwd()
-		testDir := filepath.Join(currentDir, test.location)
-		// t.Logf("test")
-		RandomSchedule(test.min, test.max, test.location)
-		numCommits := getNumberOfGitLogLines(testDir)
-		if numCommits < test.min || test.max < test.max {
-			fmt := "Number of commits: %d; should be in the range of %d to %d"
-			t.Errorf(fmt, numCommits, test.min, test.max)
+		git := &MockGit{}
+		git.Init()
+		filegen := MockFileGenerator{}
+		RandomSchedule(test.min, test.max, git, filegen)
+		if git.numInitCalls != 1 {
+			t.Errorf("Expected one init call, but got %d", git.numInitCalls)
 		}
-		// os.RemoveAll(testDir)
+		if git.numAddCalls != git.numCommitCalls {
+			t.Error("Add calls should happen as often as commit calls.")
+		}
 	}
 }
 
-func getNumberOfGitLogLines(gitLocation string) int {
-	log := filepath.Join(gitLocation, ".git", "logs", "refs", "heads", "master")
-	logFile, _ := os.Open(log)
-	defer logFile.Close()
-	logScanner := bufio.NewScanner(logFile)
-	lineCount := 0
-	for logScanner.Scan() {
-		lineCount++
-	}
-	return lineCount
+type MockFileGenerator struct{}
+
+func (m MockFileGenerator) CreateFile() string {
+	return ""
+}
+
+type MockGit struct {
+	numInitCalls   int
+	numAddCalls    int
+	numCommitCalls int
+}
+
+func (m *MockGit) Init() {
+	m.numInitCalls++
+}
+
+func (m *MockGit) Add(filename string) {
+	m.numAddCalls++
+}
+
+func (m *MockGit) Commit(message, date string) {
+	m.numCommitCalls++
 }

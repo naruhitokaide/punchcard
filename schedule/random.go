@@ -2,34 +2,32 @@ package schedule
 
 import (
 	"github.com/0xfoo/punchcard/git"
+	"github.com/0xfoo/punchcard/utils"
 	"io/ioutil"
 	"math/rand"
-	"os"
-	"path/filepath"
-	"strconv"
 	"strings"
 	"time"
 )
 
 // RandomSchedule creates random commits over the past 365/366 days.
 // These commits will be created in the location specified in the command.
-func RandomSchedule(min, max int, location string) {
-	git.Init(location)
+func RandomSchedule(min, max int, repo git.Git, filegen utils.FileGenerator) {
 	messageBase := getSplitFileContent(COMMIT_MESSAGE_BASE, BASE_SEPARATOR)
 	days := GetDaysSinceDateMinusOneYear(time.Now())
 	for day := range days {
-		rnd := getRandomNumber(min, max)
-		commits := RandomCommits(day, rnd, messageBase)
+		numCommits := getRandomNumber(min, max)
+		commits := generateRandomCommits(day, numCommits, messageBase)
 		for commit := range commits {
-			filename := createFileInDir(location)
-			git.Add(location, filename)
-			git.Commit(location, commit.message, commit.dateTime.String())
+			repo.Add(filegen.CreateFile())
+			repo.Commit(commit.message, commit.dateTime.String())
 		}
 	}
 }
 
-// RandomCommits returns a channel of random commits for a given day.
-func RandomCommits(day time.Time, numCommits int, messageBase []string) <-chan Commit {
+// generateRandomCommits returns a channel of random commits for a given day
+// the commits are a random selection of numCommits number of words from
+// the given message base
+func generateRandomCommits(day time.Time, numCommits int, messageBase []string) <-chan Commit {
 	commitChannel := make(chan Commit)
 	go func() {
 		for i := 0; i < numCommits; i++ {
@@ -78,13 +76,4 @@ func getRandomWords(inWords []string, numWords int) string {
 		outWords = append(outWords, inWords[getRandomNumber(0, len(inWords))])
 	}
 	return strings.TrimSpace(strings.Join(outWords, " "))
-}
-
-// createFileWithTimeStamp creates a file with the current nano seconds as the
-// file name, and returns this time stamp (i.e. filename)
-func createFileInDir(dir string) string {
-	filename := strconv.Itoa(time.Now().Nanosecond())
-	file, _ := os.Create(filepath.Join(dir, filename))
-	file.Close()
-	return filename
 }
