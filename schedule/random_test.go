@@ -29,14 +29,23 @@ func TestGetRandomNumber(t *testing.T) {
 	}
 }
 
+func TestGetSplitFileContent(t *testing.T) {
+	actual := getSplitFileContent(COMMIT_MESSAGE_BASE, " ")
+	t.Log(actual)
+	if len(actual) != 100 {
+		t.Errorf("File has %d words, but got %d", 100, len(actual))
+	}
+}
+
 func TestGetRandomCommitMessage(t *testing.T) {
 	var tests = []struct {
 		length int
 	}{
 		{1}, {2}, {4}, {8},
 	}
+	messageBase := getMessageBase()
 	for _, test := range tests {
-		actual := getRandomCommitMessage(test.length)
+		actual := getRandomCommitMessage(messageBase, test.length)
 		actualLength := len(strings.Split(actual, " "))
 		t.Logf("Message: %s (length: %d)", actual, actualLength)
 		if actualLength < 0 || test.length < actualLength {
@@ -44,6 +53,10 @@ func TestGetRandomCommitMessage(t *testing.T) {
 			t.Errorf(fmt, test.length, actual, actualLength)
 		}
 	}
+}
+
+func getMessageBase() []string {
+	return getSplitFileContent(COMMIT_MESSAGE_BASE, BASE_SEPARATOR)
 }
 
 func TestGetRandomTime(t *testing.T) {
@@ -84,8 +97,9 @@ func TestRandomCommits(t *testing.T) {
 		{time.Date(2016, time.February, 28, 0, 0, 0, 0, time.UTC), 2},
 		{time.Date(2016, time.February, 29, 0, 0, 0, 0, time.UTC), 8},
 	}
+	messageBase := getMessageBase()
 	for _, test := range tests {
-		actual := RandomCommits(test.date, test.numCommits)
+		actual := RandomCommits(test.date, test.numCommits, messageBase)
 		commitCount := 0
 		for commit := range actual {
 			if commit.dateTime.Day() != test.date.Day() {
@@ -99,7 +113,7 @@ func TestRandomCommits(t *testing.T) {
 	}
 }
 
-func TestRandomSchedule(t *testing.T) {
+func XTestRandomSchedule(t *testing.T) {
 	var tests = []struct {
 		min      int
 		max      int
@@ -107,7 +121,7 @@ func TestRandomSchedule(t *testing.T) {
 	}{
 		{1, 1, "testWithOneCommit"},
 		{2, 8, "testWithUpToEightCommits"},
-		{10, 100, "testWithUpToOneHundredCommits"},
+		// {10, 100, "testWithUpToOneHundredCommits"},
 	}
 	for _, test := range tests {
 		currentDir, _ := os.Getwd()

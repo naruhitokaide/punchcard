@@ -15,10 +15,11 @@ import (
 // These commits will be created in the location specified in the command.
 func RandomSchedule(min, max int, location string) {
 	git.Init(location)
-	days := getDaysSinceDateMinusOneYear(time.Now())
+	messageBase := getSplitFileContent(COMMIT_MESSAGE_BASE, BASE_SEPARATOR)
+	days := GetDaysSinceDateMinusOneYear(time.Now())
 	for day := range days {
 		rnd := getRandomNumber(min, max)
-		commits := RandomCommits(day, rnd)
+		commits := RandomCommits(day, rnd, messageBase)
 		for commit := range commits {
 			filename := createFileInDir(location)
 			git.Add(location, filename)
@@ -28,13 +29,13 @@ func RandomSchedule(min, max int, location string) {
 }
 
 // RandomCommits returns a channel of random commits for a given day.
-func RandomCommits(day time.Time, rnd int) chan Commit {
+func RandomCommits(day time.Time, rnd int, messageBase []string) chan Commit {
 	commitChannel := make(chan Commit)
 	go func() {
 		for i := 0; i < rnd; i++ {
 			commitChannel <- Commit{
 				dateTime: getRandomTime(day),
-				message:  getRandomCommitMessage(8),
+				message:  getRandomCommitMessage(messageBase, 8),
 			}
 		}
 		close(commitChannel)
@@ -51,10 +52,15 @@ func getRandomTime(day time.Time) time.Time {
 }
 
 // getRandomCommitMessage returns a commit message, no longer than length
-func getRandomCommitMessage(length int) string {
-	content, _ := ioutil.ReadFile(COMMIT_MESSAGE_BASE)
-	words := strings.Split(string(content), " ")
-	return getRandomWords(words, getRandomNumber(1, length))
+func getRandomCommitMessage(messageBase []string, length int) string {
+	return getRandomWords(messageBase, getRandomNumber(1, length))
+}
+
+// getSplitFileContent returns the content of a file (given by name) and
+// split by a separator string
+func getSplitFileContent(filename, sep string) []string {
+	content, _ := ioutil.ReadFile(filename)
+	return strings.Split(string(content), sep)
 }
 
 // getRandomNumber returns a number in the range of min and max.
