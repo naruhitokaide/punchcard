@@ -15,11 +15,11 @@ const (
 	TESTDATE    = "2005-04-07T22:13:13"
 )
 
-func TestGetLocation(t *testing.T) {
+func TestCreation(t *testing.T) {
 	testDir := getTestDir()
 	git := Repo{testDir}
-	if git.GetLocation() != testDir {
-		t.Errorf("GetLocation() == %s; wanted %s", git.GetLocation(), testDir)
+	if git.Location != testDir {
+		t.Errorf("git.Location == %s; wanted %s", git.Location, testDir)
 	}
 }
 

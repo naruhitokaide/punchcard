@@ -9,20 +9,8 @@ import (
 // permission to create a directory and read/write in it
 const PERM = 0755
 
-type Git interface {
-	GetLocation() string
-	Init()
-	Add(filename string)
-	Commit(msg, date string)
-}
-
 type Repo struct {
 	Location string
-}
-
-// GetLocation returns the location with which the repo has been created
-func (git Repo) GetLocation() string {
-	return git.Location
 }
 
 // Init initializes a git repo in the given path.
