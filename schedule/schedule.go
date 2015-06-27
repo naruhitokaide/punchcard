@@ -6,7 +6,7 @@ import (
 
 // getDaysSinceDateMinusOneYear returns a slice of days since the given date
 // minus one year. E.g. 01.01.2015 starts at the 01.01.2014.
-func getDaysSinceDateMinusOneYear(givenDate time.Time) chan time.Time {
+func GetDaysSinceDateMinusOneYear(givenDate time.Time) chan time.Time {
 	dayChannel := make(chan time.Time)
 	go func() {
 		day := getDayMinusOneYear(givenDate)
@@ -32,7 +32,7 @@ func getDayMinusOneYear(day time.Time) time.Time {
 	}
 }
 
-// isLeapDay checks if a given datetime is the 29.02 or not.
+// isLeapDay checks if a given datetime is the 29th of february or not.
 func isLeapDay(today time.Time) bool {
 	_, month, day := today.Date()
 	return (day == 29 && month == time.February)

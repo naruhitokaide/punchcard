@@ -58,16 +58,20 @@ func TestGetDaysSinceDateMinusOneYear(t *testing.T) {
 		{time.Date(2013, time.February, 28, 0, 0, 0, 0, time.UTC), 367},
 	}
 	for _, test := range tests {
-		actual := getDaysSinceDateMinusOneYear(test.date)
+		actual := GetDaysSinceDateMinusOneYear(test.date)
 		length := 0
+		actualLastDate := test.date
 		for day := range actual {
-			// just logging so day is used here, otherwise it wouldn't compile
-			t.Log(day.String())
+			actualLastDate = day
 			length++
 		}
 		if length != test.expectedLength {
-			fmt := "len(getDaysSinceDateMinusOneYear(%v)) == %d; but wanted %d"
+			fmt := "len(GetDaysSinceDateMinusOneYear(%v)) == %d; but wanted %d"
 			t.Errorf(fmt, test.date, length, test.expectedLength)
+		}
+		if !test.date.Equal(actualLastDate) {
+			fmt := "Last day should be equal to %v but was %v"
+			t.Errorf(fmt, test.date, actualLastDate)
 		}
 	}
 }
