@@ -15,25 +15,46 @@ const (
 	TESTDATE    = "2005-04-07T22:13:13"
 )
 
+func TestGetLocation(t *testing.T) {
+	testDir := getTestDir()
+	git := Repo{testDir}
+	if git.GetLocation() != testDir {
+		t.Errorf("GetLocation() == %s; wanted %s", git.GetLocation(), testDir)
+	}
+}
+
 func TestInit(t *testing.T) {
 	testDir := getTestDir()
-	Init(testDir)
+	git := Repo{testDir}
+	git.Init()
 	if !exists(filepath.Join(testDir, ".git")) {
-		t.Errorf("After git init, there should be a .git dir.")
+		t.Error("After git init, there should be a .git dir.")
+	}
+	os.RemoveAll(testDir)
+}
+
+func TestAdd(t *testing.T) {
+	testDir := getTestDir()
+	git := Repo{testDir}
+	git.Init()
+	git.Add(createTestFile())
+	if !exists(filepath.Join(testDir, ".git", "index")) {
+		t.Error("After the first git add, there should be an index file.")
 	}
 	os.RemoveAll(testDir)
 }
 
 func TestCommit(t *testing.T) {
 	testDir := getTestDir()
-	Init(testDir)
+	git := Repo{testDir}
+	git.Init()
 	testFile := createTestFile()
-	Add(testDir, testFile)
-	Commit(testDir, TESTMESSAGE, TESTDATE)
+	git.Add(testFile)
+	git.Commit(TESTMESSAGE, TESTDATE)
 	log := filepath.Join(testDir, ".git", "logs", "refs", "heads", "master")
 
 	if !containsMessage(log) {
-		t.Errorf("After commiting the commit message should be in the logs.")
+		t.Error("After commiting the commit message should be in the logs.")
 	}
 	os.RemoveAll(testDir)
 }
