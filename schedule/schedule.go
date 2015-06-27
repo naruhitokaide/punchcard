@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-// getDaysSinceDateMinusOneYear returns a slice of days since the given date
+// GetDaysSinceDateMinusOneYear returns a channel of days since the given date
 // minus one year. E.g. 01.01.2015 starts at the 01.01.2014.
 func GetDaysSinceDateMinusOneYear(givenDate time.Time) <-chan time.Time {
 	dayChannel := make(chan time.Time)
@@ -21,8 +21,8 @@ func GetDaysSinceDateMinusOneYear(givenDate time.Time) <-chan time.Time {
 	return dayChannel
 }
 
-// getDayMinusOneYear returns the daya date minus one year, except the
-// 29.02 will map to 28.02.
+// getDayMinusOneYear returns the days date minus one year, except the
+// 29.02 will maps to 28.02.
 func getDayMinusOneYear(day time.Time) time.Time {
 	if isLeapDay(day) {
 		// adjust for one year and one day
@@ -33,7 +33,7 @@ func getDayMinusOneYear(day time.Time) time.Time {
 }
 
 // isLeapDay checks if a given datetime is the 29th of february or not.
-func isLeapDay(today time.Time) bool {
-	_, month, day := today.Date()
+func isLeapDay(givenDay time.Time) bool {
+	_, month, day := givenDay.Date()
 	return (day == 29 && month == time.February)
 }

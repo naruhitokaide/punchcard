@@ -118,6 +118,10 @@ func TestRandomSchedule(t *testing.T) {
 		if git.numAddCalls != git.numCommitCalls {
 			t.Error("Add calls should happen as often as commit calls.")
 		}
+		if test.min*366 > git.numCommitCalls || test.max*366 < git.numCommitCalls {
+			fmt := "Total commits should be between %d and %d, but was %d"
+			t.Errorf(fmt, test.min*366, test.max*366, git.numCommitCalls)
+		}
 	}
 }
 

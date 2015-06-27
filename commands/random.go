@@ -7,6 +7,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	MIN_COMMITS_DEFAULT = 1
+	MAX_COMMITS_DEFAULT = 10
+)
+
 var minCommits, maxCommits int
 
 var randomCmd = &cobra.Command{
@@ -19,17 +24,20 @@ This will be done for the past 365 days and the commits are in the range of
 	Run: randomRun,
 }
 
+// randomRun creates repo and file generator based on the given location and
+// starts the RandomSchedule using these and min, max number of commits.
 func randomRun(cmd *cobra.Command, args []string) {
 	repo := git.Repo{Location}
-	filegen := utils.FileGenerator{Location}
+	filegen := utils.RandomFileGenerator{Location}
 	repo.Init()
 	schedule.RandomSchedule(minCommits, maxCommits, repo, filegen)
 }
 
+// init initializes flags with defaults and add randomCmd to main cmd.
 func init() {
-	randomCmd.Flags().IntVar(&minCommits, "min", 1,
+	randomCmd.Flags().IntVar(&minCommits, "min", MIN_COMMITS_DEFAULT,
 		"minimal #commits on a given day.")
-	randomCmd.Flags().IntVar(&maxCommits, "max", 10,
+	randomCmd.Flags().IntVar(&maxCommits, "max", MAX_COMMITS_DEFAULT,
 		"maximal #commits on a given day.")
 	PunchCardCmd.AddCommand(randomCmd)
 }
