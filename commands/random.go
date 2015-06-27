@@ -1,8 +1,9 @@
 package commands
 
 import (
-	"fmt"
+	"github.com/0xfoo/punchcard/git"
 	"github.com/0xfoo/punchcard/schedule"
+	"github.com/0xfoo/punchcard/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +20,10 @@ This will be done for the past 365 days and the commits are in the range of
 }
 
 func randomRun(cmd *cobra.Command, args []string) {
-	schedule.RandomSchedule(minCommits, maxCommits, Location)
+	repo := git.Repo{Location}
+	filegen := utils.FileGenerator{Location}
+	repo.Init()
+	schedule.RandomSchedule(minCommits, maxCommits, repo, filegen)
 }
 
 func init() {
