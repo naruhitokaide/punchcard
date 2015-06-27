@@ -6,7 +6,7 @@ import (
 
 // getDaysSinceDateMinusOneYear returns a slice of days since the given date
 // minus one year. E.g. 01.01.2015 starts at the 01.01.2014.
-func GetDaysSinceDateMinusOneYear(givenDate time.Time) chan time.Time {
+func GetDaysSinceDateMinusOneYear(givenDate time.Time) <-chan time.Time {
 	dayChannel := make(chan time.Time)
 	go func() {
 		day := getDayMinusOneYear(givenDate)

@@ -29,10 +29,10 @@ func RandomSchedule(min, max int, location string) {
 }
 
 // RandomCommits returns a channel of random commits for a given day.
-func RandomCommits(day time.Time, rnd int, messageBase []string) chan Commit {
+func RandomCommits(day time.Time, numCommits int, messageBase []string) <-chan Commit {
 	commitChannel := make(chan Commit)
 	go func() {
-		for i := 0; i < rnd; i++ {
+		for i := 0; i < numCommits; i++ {
 			commitChannel <- Commit{
 				dateTime: getRandomTime(day),
 				message:  getRandomCommitMessage(messageBase, 8),
