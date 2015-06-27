@@ -3,7 +3,6 @@ package schedule
 import (
 	"github.com/0xfoo/punchcard/git"
 	"github.com/0xfoo/punchcard/utils"
-	"io/ioutil"
 	"math/rand"
 	"strings"
 	"time"
@@ -17,7 +16,7 @@ const (
 // RandomSchedule creates random commits over the past 365/366 days.
 // These commits will be created in the given git repo using the FileGenerator.
 func RandomSchedule(min, max int, repo git.Git, filegen utils.FileGenerator) {
-	messageBase := getSplitFileContent(COMMIT_MESSAGE_BASE, BASE_SEPARATOR)
+	messageBase := strings.Split(string(COMMIT_MESSAGE_BASE), BASE_SEPARATOR)
 	days := GetDaysSinceDateMinusOneYear(time.Now())
 	for day := range days {
 		numCommits := getRandomNumber(min, max)
@@ -58,13 +57,6 @@ func getRandomTime(day time.Time) time.Time {
 func getRandomCommitMessage(messageBase []string, length int) string {
 	commitMessageLength := getRandomNumber(MIN_COMMIT_MESSAGE_LENGTH, length)
 	return getRandomWords(messageBase, commitMessageLength)
-}
-
-// getSplitFileContent returns the content of a file (given by name) and
-// split by a separator string.
-func getSplitFileContent(filename, sep string) []string {
-	content, _ := ioutil.ReadFile(filename)
-	return strings.Split(string(content), sep)
 }
 
 // getRandomNumber returns a number in the range of min and max.

@@ -11,11 +11,7 @@ func TestGetRandomNumber(t *testing.T) {
 		min int
 		max int
 	}{
-		{0, 0},
-		{0, 1},
-		{1, 1},
-		{0, 10},
-		{10, 20},
+		{0, 0}, {0, 1}, {1, 1}, {0, 10}, {10, 20},
 	}
 	for _, test := range tests {
 		actual := getRandomNumber(test.min, test.max)
@@ -26,20 +22,8 @@ func TestGetRandomNumber(t *testing.T) {
 	}
 }
 
-func TestGetSplitFileContent(t *testing.T) {
-	actual := getSplitFileContent(COMMIT_MESSAGE_BASE, " ")
-	t.Log(actual)
-	if len(actual) != 100 {
-		t.Errorf("File has %d words, but got %d", 100, len(actual))
-	}
-}
-
 func TestGetRandomCommitMessage(t *testing.T) {
-	var tests = []struct {
-		length int
-	}{
-		{1}, {2}, {4}, {8},
-	}
+	var tests = []struct{ length int }{{1}, {2}, {4}, {8}}
 	messageBase := getMessageBase()
 	for _, test := range tests {
 		actual := getRandomCommitMessage(messageBase, test.length)
@@ -53,7 +37,7 @@ func TestGetRandomCommitMessage(t *testing.T) {
 }
 
 func getMessageBase() []string {
-	return getSplitFileContent(COMMIT_MESSAGE_BASE, BASE_SEPARATOR)
+	return strings.Split(string(COMMIT_MESSAGE_BASE), BASE_SEPARATOR)
 }
 
 func TestGetRandomTime(t *testing.T) {
