@@ -24,5 +24,8 @@ func TextSchedule(text string, repo git.Git, filegen utils.FileGenerator) error 
 
 func GetTextCommitSchedule(text string, days []time.Time, messageBase []string) ([]Commit, error) {
 	// TODO
+	// check if text can be put into commits
+	// concatenate letters with one column as space between letters
+	// map the result onto commits using the given days
 	return nil, nil
 }
