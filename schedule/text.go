@@ -11,7 +11,7 @@ import (
 func TextSchedule(text string, repo git.Git, filegen utils.FileGenerator) error {
 	messageBase := GetCommitMessageBase()
 	days := GetDaysSinceNowMinusOneYear()
-	commits, err := GetTextCommitSchedule(text, days, messageBase)
+	commits, err := getTextCommitSchedule(text, days, messageBase)
 	if err != nil {
 		return err
 	}
@@ -22,7 +22,7 @@ func TextSchedule(text string, repo git.Git, filegen utils.FileGenerator) error 
 	return err
 }
 
-func GetTextCommitSchedule(text string, days []time.Time, messageBase []string) ([]Commit, error) {
+func getTextCommitSchedule(text string, days []time.Time, messageBase []string) ([]Commit, error) {
 	// TODO
 	// check if text can be put into commits
 	// concatenate letters with one column as space between letters
