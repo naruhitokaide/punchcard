@@ -21,7 +21,21 @@ func TestBuildCommitScheduleFullWeeks(t *testing.T) {
 	}
 }
 
-func TestBuildCommitScheduleEdgeCases(t *testing.T) {
+func TestBuildCommitScheduleWednesday(t *testing.T) {
+	var tests = []struct {
+		startDay time.Time
+		numDays  int
+	}{
+		{}, // TODO add edge cases
+	}
+	for _, test := range tests {
+		days := getTestDays(test.startDay, test.numDays)
+		schedule := BuildCommitSchedule(days)
+		// TODO add assertions
+	}
+}
+
+func TestBuildCommitScheduleThrusdayEnd(t *testing.T) {
 	var tests = []struct {
 		startDay time.Time
 		numDays  int
