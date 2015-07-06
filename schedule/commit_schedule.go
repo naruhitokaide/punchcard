@@ -6,7 +6,7 @@ import (
 
 type ScheduleEntries int
 
-type CommitSchedule [][]int
+type CommitSchedule [][]ScheduleEntries
 
 const (
 	NOT_A_FIELD ScheduleEntries = -1
@@ -32,18 +32,30 @@ func BuildCommitSchedule(days []time.Time) CommitSchedule {
 	return schedule
 }
 
-func buildFirstWeek(day time.Weekday) []int {
-	var firstWeek []int
+// buildFirstWeek creates NUM_WEEK_DAYS schedule entries, where the entries
+// before the given week day are NOT_A_FIELD and EMPTY afterwards (including given day)
+func buildFirstWeek(day time.Weekday) []ScheduleEntries {
+	var firstWeek []ScheduleEntries
 	for i := 0; i < NUM_WEEK_DAYS; i++ {
-		firstWeek = append(firstWeek, i)
+		if i < int(day) {
+			firstWeek = append(firstWeek, NOT_A_FIELD)
+		} else {
+			firstWeek = append(firstWeek, EMPTY)
+		}
 	}
 	return firstWeek
 }
 
-func buildLastWeek(day time.Weekday) []int {
-	var lastWeek []int
+// buildLastWeek creates NUM_WEEK_DAYS schedule entries, where the entries
+// after the given week day are NOT_A_FIELD and EMPTY before (including given day)
+func buildLastWeek(day time.Weekday) []ScheduleEntries {
+	var lastWeek []ScheduleEntries
 	for i := 0; i < NUM_WEEK_DAYS; i++ {
-		lastWeek = append(lastWeek, i)
+		if i > int(day) {
+			lastWeek = append(lastWeek, NOT_A_FIELD)
+		} else {
+			lastWeek = append(lastWeek, EMPTY)
+		}
 	}
 	return lastWeek
 }
