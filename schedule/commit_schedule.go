@@ -6,7 +6,7 @@ import (
 
 type ScheduleEntries int
 
-type CommitSchedule [][]ScheduleEntries
+type CommitSchedule [7][53]ScheduleEntries
 
 const (
 	NOT_A_FIELD ScheduleEntries = -1
@@ -23,13 +23,9 @@ const (
 // initialized with EMPTY except those which are not in the range of days.
 // The CommitSchedule is a table of ints.
 func BuildCommitSchedule(days []time.Time) CommitSchedule {
-	// get weeks, which determine width and height is seven
-	// fill entries with EMPTY or NOT_A_FIELD
-	schedule := make(CommitSchedule, 0) // TODO figure out num weeks
-	// firstWeek := buildFirstWeek(days[0].Weekday())
-	// lastWeek := buildLastWeek(days[len(days)-1].Weekday())
-	// TODO get days inbetween first and last week and join them
-	return schedule
+	firstWeek := buildFirstWeek(days[0].Weekday())
+	lastWeek := buildLastWeek(days[len(days)-1].Weekday())
+	return connectWeeksToSchedule(firstWeek, lastWeek)
 }
 
 // buildFirstWeek creates NUM_WEEK_DAYS schedule entries, where the entries
@@ -60,6 +56,9 @@ func buildLastWeek(day time.Weekday) []ScheduleEntries {
 	return lastWeek
 }
 
-func connectWeeksToSchedule(firstWeek, lastWeek []ScheduleEntries) [][]ScheduleEntries {
-	return nil
+// connectWeeksToSchedule creates a CommitSchedule, by first and last week,
+// filling in the weeks inbetween and initializing everything inbetween with EMPTY
+func connectWeeksToSchedule(firstWeek, lastWeek []ScheduleEntries) CommitSchedule {
+	schedule := new(CommitSchedule)
+	return *schedule
 }
