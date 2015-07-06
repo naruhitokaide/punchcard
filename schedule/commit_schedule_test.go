@@ -163,11 +163,13 @@ func TestConnectWeeksToSchedule(t *testing.T) {
 		lastWeek := buildLastWeek(test.lastDay)
 		schedule := connectWeeksToSchedule(firstWeek, lastWeek)
 		length := 0
-		for _, entry := range schedule {
-			if entry != EMPTY || entry != NOT_A_FIELD {
-				t.Errorf("Entry should be EMPTY or NOT_A_FIELD, but was %v", entry)
+		for _, row := range schedule {
+			for _, entry := range row {
+				if entry != EMPTY || entry != NOT_A_FIELD {
+					t.Errorf("Entry should be EMPTY or NOT_A_FIELD, but was %v", entry)
+				}
+				length++
 			}
-			length++
 		}
 		if length != test.numEntries {
 			t.Errorf("Expected length was %d, but got %d", test.numEntries, length)
