@@ -59,3 +59,7 @@ func buildLastWeek(day time.Weekday) []ScheduleEntries {
 	}
 	return lastWeek
 }
+
+func connectWeeksToSchedule(firstWeek, lastWeek []ScheduleEntries) [][]ScheduleEntries {
+	return nil
+}
