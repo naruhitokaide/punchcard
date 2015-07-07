@@ -152,27 +152,40 @@ func sliceEqual(sliceA, sliceB []ScheduleEntries) bool {
 
 func TestConnectWeeksToSchedule(t *testing.T) {
 	var tests = []struct {
-		firstDay   time.Weekday
-		lastDay    time.Weekday
-		numEntries int
+		firstDay            time.Weekday
+		lastDay             time.Weekday
+		numEntries          int
+		numNotAFieldEntries int
 	}{
-		{time.Sunday, time.Saturday, 371},
+		{time.Sunday, time.Saturday, 371, 0},
+		{time.Monday, time.Saturday, 371, 1},
+		{time.Wednesday, time.Wednesday, 371, 6},
+		{time.Saturday, time.Sunday, 371, 12},
 	}
 	for _, test := range tests {
 		firstWeek := buildFirstWeek(test.firstDay)
 		lastWeek := buildLastWeek(test.lastDay)
 		schedule := connectWeeksToSchedule(firstWeek, lastWeek)
 		length := 0
+		numNotAFieldEntries := 0
 		for _, row := range schedule {
 			for _, entry := range row {
-				if entry != EMPTY || entry != NOT_A_FIELD {
+				if entry != EMPTY && entry != NOT_A_FIELD {
 					t.Errorf("Entry should be EMPTY or NOT_A_FIELD, but was %v", entry)
+				}
+				if entry == NOT_A_FIELD {
+					numNotAFieldEntries++
 				}
 				length++
 			}
 		}
+
 		if length != test.numEntries {
 			t.Errorf("Expected length was %d, but got %d", test.numEntries, length)
+		}
+
+		if numNotAFieldEntries != test.numNotAFieldEntries {
+			t.Errorf("Expected %d NOT_A_FIELD, but got %d", test.numNotAFieldEntries, numNotAFieldEntries)
 		}
 	}
 }
