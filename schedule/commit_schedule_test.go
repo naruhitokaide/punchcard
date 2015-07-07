@@ -7,89 +7,42 @@ import (
 
 func XTestBuildCommitScheduleFullWeeks(t *testing.T) {
 	var tests = []struct {
-		startDay time.Time
-		numDays  int
+		startDay            time.Time
+		numNotAFieldEntries int
 	}{
-		{time.Date(2009, time.November, 9, 0, 0, 0, 0, time.UTC), 7},
-		{time.Date(2015, time.November, 9, 0, 0, 0, 0, time.UTC), 21},
-		{time.Date(2014, time.July, 7, 0, 0, 0, 0, time.UTC), 365},
+		// TODO add edge cases, like leap years etc
+		{time.Date(2009, time.November, 9, 0, 0, 0, 0, time.UTC), 0},
+		{time.Date(2015, time.November, 9, 0, 0, 0, 0, time.UTC), 6},
+		{time.Date(2014, time.July, 7, 0, 0, 0, 0, time.UTC), 12},
 	}
 	for _, test := range tests {
-		days := getTestDays(test.startDay, test.numDays)
+		days := getTestDays(test.startDay)
 		schedule := BuildCommitSchedule(days)
-		for r, row := range schedule {
-			for c, col := range row {
-				if col != EMPTY {
-					fmt := "Expected only EMPTY values, but got %d at (%d,%d)"
-					t.Errorf(fmt, col, r, c)
+		numNotAFieldEntries := 0
+		for _, row := range schedule {
+			for _, entry := range row {
+				if entry != EMPTY && entry != NOT_A_FIELD {
+					t.Errorf("Entry should be EMPTY or NOT_A_FIELD, but was %v", entry)
+				}
+				if entry == NOT_A_FIELD {
+					numNotAFieldEntries++
 				}
 			}
+
 		}
+		if numNotAFieldEntries != test.numNotAFieldEntries {
+			t.Errorf("Expected %d NOT_A_FIELD entries, but got %d",
+				test.numNotAFieldEntries, numNotAFieldEntries)
+		}
+
 	}
 }
 
-func XTestBuildCommitScheduleWednesdayStart(t *testing.T) {
-	var tests = []struct {
-		startDay time.Time
-		numDays  int
-	}{
-		{time.Date(2009, time.November, 11, 0, 0, 0, 0, time.UTC), 9},
-		{time.Date(2015, time.November, 11, 0, 0, 0, 0, time.UTC), 23},
-		{time.Date(2014, time.July, 9, 0, 0, 0, 0, time.UTC), 367},
-	}
-	for _, test := range tests {
-		days := getTestDays(test.startDay, test.numDays)
-		schedule := BuildCommitSchedule(days)
-		for r, row := range schedule {
-			for c, col := range row {
-				firstWeekMondayOrTuesDay := (c == 0 && r < 2)
-				if firstWeekMondayOrTuesDay {
-					if col != NOT_A_FIELD {
-						fmt := "Expected NOT_A_FIELD values, but got %d at (%d,%d)"
-						t.Errorf(fmt, col, r, c)
-					}
-				} else if col != EMPTY {
-					fmt := "Expected only EMPTY values, but got %d at (%d,%d)"
-					t.Errorf(fmt, col, r, c)
-				}
-			}
-		}
-	}
-}
-
-func XTestBuildCommitScheduleThrusdayEnd(t *testing.T) {
-	var tests = []struct {
-		startDay time.Time
-		numDays  int
-	}{
-		{time.Date(2009, time.November, 9, 0, 0, 0, 0, time.UTC), 4},
-		{time.Date(2015, time.November, 9, 0, 0, 0, 0, time.UTC), 19},
-		{time.Date(2014, time.July, 7, 0, 0, 0, 0, time.UTC), 362},
-	}
-	for _, test := range tests {
-		days := getTestDays(test.startDay, test.numDays)
-		schedule := BuildCommitSchedule(days)
-		for r, row := range schedule {
-			for c, col := range row {
-				lastWeekFridayOrSaturdayOrSunday := (c == len(row) && r > 4)
-				if lastWeekFridayOrSaturdayOrSunday {
-					if col != NOT_A_FIELD {
-						fmt := "Expected NOT_A_FIELD values, but got %d at (%d,%d)"
-						t.Errorf(fmt, col, r, c)
-					}
-				} else if col != EMPTY {
-					fmt := "Expected only EMPTY values, but got %d at (%d,%d)"
-					t.Errorf(fmt, col, r, c)
-				}
-			}
-		}
-	}
-}
-
-func getTestDays(startDay time.Time, numDays int) []time.Time {
+func getTestDays(startDay time.Time) []time.Time {
 	var resultingDays []time.Time
-	for i := 0; i < numDays; i++ {
-		resultingDays = append(resultingDays, startDay.AddDate(0, 0, i))
+	days := GetDaysSinceDateMinusOneYear(startDay)
+	for day := range days {
+		resultingDays = append(resultingDays, day)
 	}
 	return resultingDays
 }
@@ -185,7 +138,8 @@ func TestConnectWeeksToSchedule(t *testing.T) {
 		}
 
 		if numNotAFieldEntries != test.numNotAFieldEntries {
-			t.Errorf("Expected %d NOT_A_FIELD, but got %d", test.numNotAFieldEntries, numNotAFieldEntries)
+			t.Errorf("Expected %d NOT_A_FIELD entries, but got %d",
+				test.numNotAFieldEntries, numNotAFieldEntries)
 		}
 	}
 }
