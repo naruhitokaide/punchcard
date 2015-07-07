@@ -60,5 +60,16 @@ func buildLastWeek(day time.Weekday) []ScheduleEntries {
 // filling in the weeks inbetween and initializing everything inbetween with EMPTY
 func connectWeeksToSchedule(firstWeek, lastWeek []ScheduleEntries) CommitSchedule {
 	schedule := new(CommitSchedule)
+	for row_index, row := range schedule {
+		for column_index, _ := range row {
+			if column_index == 0 {
+				schedule[row_index][column_index] = firstWeek[row_index]
+			} else if column_index == 52 {
+				schedule[row_index][column_index] = lastWeek[row_index]
+			} else {
+				schedule[row_index][column_index] = EMPTY
+			}
+		}
+	}
 	return *schedule
 }
