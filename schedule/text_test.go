@@ -58,3 +58,37 @@ func XTestGetTextCommitSchedule(t *testing.T) {
 		}
 	}
 }
+
+func TestTextFits(t *testing.T) {
+	var tests = []struct {
+		text        string
+		isPrintable bool
+	}{
+		{"hello", true},
+		{"", false},
+		{"this is to long to print", false},
+	}
+	for _, test := range tests {
+		actual := textFits(test.text)
+		if actual != test.isPrintable {
+			t.Errorf("Expected check to be %v, but was %v", test.isPrintable, actual)
+		}
+	}
+}
+
+func TestGetTextWidth(t *testing.T) {
+	var tests = []struct {
+		text      string
+		textWidth int
+	}{
+		{"hello", 24},
+		{"", 0},
+		{"this is to long to print", 96},
+	}
+	for _, test := range tests {
+		actual := getTextWidth(test.text)
+		if actual != test.textWidth {
+			t.Errorf("Expected width to be %d, but was %d", test.textWidth, actual)
+		}
+	}
+}
