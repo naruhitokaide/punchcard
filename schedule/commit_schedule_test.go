@@ -5,15 +5,15 @@ import (
 	"time"
 )
 
-func XTestBuildCommitScheduleFullWeeks(t *testing.T) {
+func TestBuildCommitSchedule(t *testing.T) {
 	var tests = []struct {
 		startDay            time.Time
 		numNotAFieldEntries int
 	}{
-		// TODO add edge cases, like leap years etc
-		{time.Date(2009, time.November, 9, 0, 0, 0, 0, time.UTC), 0},
-		{time.Date(2015, time.November, 9, 0, 0, 0, 0, time.UTC), 6},
-		{time.Date(2014, time.July, 7, 0, 0, 0, 0, time.UTC), 12},
+		{time.Date(2009, time.November, 9, 0, 0, 0, 0, time.UTC), 5},
+		{time.Date(2016, time.February, 28, 0, 0, 0, 0, time.UTC), 12},
+		{time.Date(2016, time.February, 29, 0, 0, 0, 0, time.UTC), 11},
+		{time.Date(2013, time.February, 28, 0, 0, 0, 0, time.UTC), 4},
 	}
 	for _, test := range tests {
 		days := getTestDays(test.startDay)
