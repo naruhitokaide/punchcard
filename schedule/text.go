@@ -31,8 +31,8 @@ func getTextCommitSchedule(text string, days []time.Time, messageBase []string) 
 	if !textFits(text) {
 		return nil, errors.New("Text does not fit.")
 	}
-	schedule := buildTextCommitSchedule(days, text) // BuildCommitSchedule(days)
-	commits := convertScheduleToCommits(schedule, textField)
+	schedule := buildTextCommitSchedule(days, text)
+	commits := convertScheduleToCommits(schedule)
 	return commits, nil
 }
 
@@ -48,14 +48,14 @@ func getTextWidth(text string) int {
 	return len(text)
 }
 
-func convertScheduleToCommits(schedule CommitSchedule, textField [][]int) []Commit {
+func convertScheduleToCommits(schedule CommitSchedule) []Commit {
 	return nil
 }
 
 func buildTextCommitSchedule(days []time.Time, text string) CommitSchedule {
 	schedule := BuildCommitSchedule(days)
-	textFields := translateTextIntoXXX(text)
-	addFieldsToSchedule(*schedule, textFields)
+	textFields := translateTextIntoArray(text)
+	addFieldsToSchedule(&schedule, textFields)
 	return schedule
 }
 
@@ -67,7 +67,7 @@ func translateTextIntoArray(text string) [][]int {
 func addFieldsToSchedule(schedule *CommitSchedule, fields [][]int) {
 	for row_index, row := range fields {
 		for column_index, field := range row {
-			schedule[row_index][column_index] = field
+			schedule[row_index][column_index] = ScheduleEntries(field)
 		}
 	}
 }
