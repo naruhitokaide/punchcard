@@ -92,3 +92,19 @@ func TestGetTextWidth(t *testing.T) {
 		}
 	}
 }
+
+func TestConvertScheduleToCommits(t *testing.T) {
+	// TODO
+}
+
+func TestBuildTextCommitSchedule(t *testing.T) {
+	// TODO
+}
+
+func TestTranslateTextIntoArray(t *testing.T) {
+	// TODO
+}
+
+func TestAddFieldsToSchedule(t *testing.T) {
+	// TODO
+}
