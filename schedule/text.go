@@ -28,15 +28,12 @@ func TextSchedule(text string, repo git.Git, filegen utils.FileGenerator) error 
 }
 
 func getTextCommitSchedule(text string, days []time.Time, messageBase []string) ([]Commit, error) {
-	// TODO
-	// check if text can be put into a commit schedule (width < 52)
 	if !textFits(text) {
 		return nil, errors.New("Text does not fit.")
 	}
-	// concatenate letters with one column as space between letters
-	// put the result into a commit schedule
-	// translate the commit schedule to a []Commit
-	return nil, nil
+	schedule := buildTextCommitSchedule(days, text) // BuildCommitSchedule(days)
+	commits := convertScheduleToCommits(schedule, textField)
+	return commits, nil
 }
 
 func textFits(text string) bool {
@@ -47,6 +44,30 @@ func textFits(text string) bool {
 }
 
 func getTextWidth(text string) int {
-	// TODO translate into commit letters or some how get width
+	// TODO get the width of each letter and add spacing
 	return len(text)
+}
+
+func convertScheduleToCommits(schedule CommitSchedule, textField [][]int) []Commit {
+	return nil
+}
+
+func buildTextCommitSchedule(days []time.Time, text string) CommitSchedule {
+	schedule := BuildCommitSchedule(days)
+	textFields := translateTextIntoXXX(text)
+	addFieldsToSchedule(*schedule, textFields)
+	return schedule
+}
+
+func translateTextIntoArray(text string) [][]int {
+	// TODO concatenate letters with one column as space between letters
+	return nil
+}
+
+func addFieldsToSchedule(schedule *CommitSchedule, fields [][]int) {
+	for row_index, row := range fields {
+		for column_index, field := range row {
+			schedule[row_index][column_index] = field
+		}
+	}
 }
