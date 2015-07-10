@@ -94,7 +94,21 @@ func TestGetTextWidth(t *testing.T) {
 }
 
 func TestConvertScheduleToCommits(t *testing.T) {
-	// TODO
+	var tests = []struct {
+		numCommits int
+	}{
+		{0}, {1}, {365},
+	}
+	for _, test := range tests {
+		days := GetDaysSinceNowMinusOneYear()
+		schedule := BuildCommitSchedule(days)
+		// TODO add test.numCommits to schedule
+		commits := convertScheduleToCommits(schedule)
+		actual := len(commits)
+		if actual != test.numCommits {
+			t.Errorf("Expected %d commits, but got %d", test.numCommits, actual)
+		}
+	}
 }
 
 func TestBuildTextCommitSchedule(t *testing.T) {
