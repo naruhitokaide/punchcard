@@ -1,6 +1,7 @@
 package schedule
 
 import (
+	"math/rand"
 	"testing"
 )
 
@@ -102,7 +103,7 @@ func TestConvertScheduleToCommits(t *testing.T) {
 	for _, test := range tests {
 		days := GetDaysSinceNowMinusOneYear()
 		schedule := BuildCommitSchedule(days)
-		// TODO add test.numCommits to schedule
+		addCommitsToSchedule(&schedule, test.numCommits)
 		commits := convertScheduleToCommits(schedule)
 		actual := len(commits)
 		if actual != test.numCommits {
@@ -111,12 +112,51 @@ func TestConvertScheduleToCommits(t *testing.T) {
 	}
 }
 
+func addCommitsToSchedule(schedule *CommitSchedule, numCommits int) {
+	for i := 0; i < numCommits; i++ {
+		randRow := rand.Intn(7)
+		randCol := rand.Intn(53)
+		schedule[randCol][randRow] += 1
+	}
+}
+
 func TestBuildTextCommitSchedule(t *testing.T) {
-	// TODO
+	var tests = []struct {
+		text       string
+		numCommits int
+	}{
+		{"hello", 62},
+		{"i", 6},
+	}
+	for _, test := range tests {
+		days := GetDaysSinceNowMinusOneYear()
+		commits := buildTextCommitSchedule(days, test.text)
+		actual := len(commits)
+		if actual != test.numCommits {
+			t.Errorf("Expected width to be %d, but was %d", test.numCommits, actual)
+		}
+	}
 }
 
 func TestTranslateTextIntoArray(t *testing.T) {
-	// TODO
+	var tests = []struct {
+		letter    string
+		numPixels int
+	}{
+		{"a", 14},
+		{"i", 6},
+	}
+	for _, test := range tests {
+		letter := translateTextIntoArray(test.letter)
+		sumEntries := 0
+		for _, entry := range letter {
+			sumEntries += entry
+		}
+		actual := sumEntries
+		if actual != test.numPixels {
+			t.Errorf("Expected width to be %d, but was %d", test.numPixels, actual)
+		}
+	}
 }
 
 func TestAddFieldsToSchedule(t *testing.T) {
