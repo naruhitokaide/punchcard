@@ -125,8 +125,7 @@ func TestBuildTextCommitSchedule(t *testing.T) {
 		text       string
 		numCommits int
 	}{
-		{"hello", 62},
-		{"i", 6},
+		{"hello", 62}, {"i", 6},
 	}
 	for _, test := range tests {
 		days := GetDaysSinceNowMinusOneYear()
@@ -143,14 +142,15 @@ func TestTranslateTextIntoArray(t *testing.T) {
 		letter    string
 		numPixels int
 	}{
-		{"a", 14},
-		{"i", 6},
+		{"a", 14}, {"i", 6},
 	}
 	for _, test := range tests {
 		letter := translateTextIntoArray(test.letter)
 		sumEntries := 0
-		for _, entry := range letter {
-			sumEntries += entry
+		for _, row := range letter {
+			for _, entry := range row {
+				sumEntries += entry
+			}
 		}
 		actual := sumEntries
 		if actual != test.numPixels {

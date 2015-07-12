@@ -4,18 +4,11 @@ import (
 	"time"
 )
 
-type ScheduleEntries int
-
-type CommitSchedule [7][53]ScheduleEntries
+type CommitSchedule [7][53]int
 
 const (
-	NOT_A_FIELD ScheduleEntries = -1
-	EMPTY       ScheduleEntries = 0
-	ONE         ScheduleEntries = 1
-	TWO         ScheduleEntries = 2
-	THREE       ScheduleEntries = 3
-	FOUR        ScheduleEntries = 4
-
+	NOT_A_FIELD   = -1
+	EMPTY         = 0
 	NUM_WEEK_DAYS = 7
 )
 
@@ -30,8 +23,8 @@ func BuildCommitSchedule(days []time.Time) CommitSchedule {
 
 // buildFirstWeek creates NUM_WEEK_DAYS schedule entries, where the entries
 // before the given week day are NOT_A_FIELD and EMPTY afterwards (including given day)
-func buildFirstWeek(day time.Weekday) []ScheduleEntries {
-	var firstWeek []ScheduleEntries
+func buildFirstWeek(day time.Weekday) []int {
+	var firstWeek []int
 	for i := 0; i < NUM_WEEK_DAYS; i++ {
 		if i < int(day) {
 			firstWeek = append(firstWeek, NOT_A_FIELD)
@@ -44,8 +37,8 @@ func buildFirstWeek(day time.Weekday) []ScheduleEntries {
 
 // buildLastWeek creates NUM_WEEK_DAYS schedule entries, where the entries
 // after the given week day are NOT_A_FIELD and EMPTY before (including given day)
-func buildLastWeek(day time.Weekday) []ScheduleEntries {
-	var lastWeek []ScheduleEntries
+func buildLastWeek(day time.Weekday) []int {
+	var lastWeek []int
 	for i := 0; i < NUM_WEEK_DAYS; i++ {
 		if i > int(day) {
 			lastWeek = append(lastWeek, NOT_A_FIELD)
@@ -58,7 +51,7 @@ func buildLastWeek(day time.Weekday) []ScheduleEntries {
 
 // connectWeeksToSchedule creates a CommitSchedule, by first and last week,
 // filling in the weeks inbetween and initializing everything inbetween with EMPTY
-func connectWeeksToSchedule(firstWeek, lastWeek []ScheduleEntries) CommitSchedule {
+func connectWeeksToSchedule(firstWeek, lastWeek []int) CommitSchedule {
 	schedule := new(CommitSchedule)
 	for row_index, row := range schedule {
 		for column_index, _ := range row {

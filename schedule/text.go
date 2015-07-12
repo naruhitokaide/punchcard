@@ -67,7 +67,7 @@ func translateTextIntoArray(text string) [][]int {
 func addFieldsToSchedule(schedule *CommitSchedule, fields [][]int) {
 	for row_index, row := range fields {
 		for column_index, field := range row {
-			schedule[row_index][column_index] = ScheduleEntries(field)
+			schedule[row_index][column_index] = field
 		}
 	}
 }
