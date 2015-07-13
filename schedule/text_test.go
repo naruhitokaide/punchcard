@@ -137,28 +137,29 @@ func TestBuildTextCommitSchedule(t *testing.T) {
 	}
 }
 
-func TestTranslateTextIntoArray(t *testing.T) {
+func TestMapTextOntoCommitSchedule(t *testing.T) {
 	var tests = []struct {
-		letter    string
+		text      string
 		numPixels int
 	}{
-		{"a", 14}, {"i", 6},
+		{"a", 14}, {"i", 6}, {" ", 0},
 	}
 	for _, test := range tests {
-		letter := translateTextIntoArray(test.letter)
-		sumEntries := 0
+		days := GetDaysSinceNowMinusOneYear()
+		schedule := BuildCommitSchedule(days)
+		letter := mapTextOntoCommitSchedule(test.text, &schedule)
+		actual := 0
 		for _, row := range letter {
 			for _, entry := range row {
-				sumEntries += entry
+				actual += entry
 			}
 		}
-		actual := sumEntries
 		if actual != test.numPixels {
 			t.Errorf("Expected width to be %d, but was %d", test.numPixels, actual)
 		}
 	}
 }
 
-func TestAddFieldsToSchedule(t *testing.T) {
+func TestBuildTextFields(t *testing.T) {
 	// TODO
 }

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/0xfoo/punchcard/git"
 	"github.com/0xfoo/punchcard/utils"
+	"strings"
 	"time"
 )
 
@@ -54,20 +55,29 @@ func convertScheduleToCommits(schedule CommitSchedule) []Commit {
 
 func buildTextCommitSchedule(days []time.Time, text string) CommitSchedule {
 	schedule := BuildCommitSchedule(days)
-	textFields := translateTextIntoArray(text)
-	addFieldsToSchedule(&schedule, textFields)
+	mapTextOntoCommitSchedule(text, &schedule)
 	return schedule
 }
 
-func translateTextIntoArray(text string) [][]int {
-	// TODO concatenate letters with one column as space between letters
-	return nil
-}
-
-func addFieldsToSchedule(schedule *CommitSchedule, fields [][]int) {
-	for row_index, row := range fields {
-		for column_index, field := range row {
-			schedule[row_index][column_index] = field
+func mapTextOntoCommitSchedule(text string, schedule *CommitSchedule) {
+	letters := buildTextFields(text)
+	rightShift := 0
+	for _, fields := range letters {
+		for rowIndex, row := range fields {
+			for columnIndex, field := range row {
+				schedule[rowIndex][columnIndex+rightShift] = field
+			}
+			rightShift += len(row)
 		}
 	}
+}
+
+func buildTextFields(text string) [][][]int {
+	var letters [][][]int
+	space, _ := utils.TranslateLetter(" ")
+	for _, char := range strings.Split(text, "") {
+		letter, _ := utils.TranslateLetter(char)
+		letters = append(letters, letter, space)
+	}
+	return letters
 }
