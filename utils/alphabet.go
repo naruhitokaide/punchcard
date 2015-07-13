@@ -92,6 +92,6 @@ func TranslateLetter(letter string) ([][]int, error) {
 	case letter == " ":
 		return SPACE, err
 	default:
-		return nil, errors.New("Letter must be lowercase: [a-z]{1}")
+		return nil, errors.New("The letter must be lowercase or a space: [a-z ]{1}")
 	}
 }
