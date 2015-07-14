@@ -45,12 +45,17 @@ func textFits(text string) bool {
 }
 
 func getTextWidth(text string) int {
-	// TODO get the width of each letter and add spacing
-	return len(text)
+	width := 0
+	for _, char := range strings.Split(text, "") {
+		letter, _ := utils.TranslateLetter(char)
+		width += len(letter[0]) + 1 // adjust for space between letters
+	}
+	return width - 1 // last letter does not need and extra space
 }
 
 func convertScheduleToCommits(schedule CommitSchedule) []Commit {
-	return nil
+	var commits []Commit
+	return commits
 }
 
 func buildTextCommitSchedule(days []time.Time, text string) CommitSchedule {
@@ -75,9 +80,15 @@ func mapTextOntoCommitSchedule(text string, schedule *CommitSchedule) {
 func buildTextFields(text string) [][][]int {
 	var letters [][][]int
 	space, _ := utils.TranslateLetter(" ")
-	for _, char := range strings.Split(text, "") {
+	length := len(text)
+	for index, char := range strings.Split(text, "") {
 		letter, _ := utils.TranslateLetter(char)
-		letters = append(letters, letter, space)
+		if index == length-1 {
+			letters = append(letters, letter)
+		} else {
+
+			letters = append(letters, letter, space)
+		}
 	}
 	return letters
 }
