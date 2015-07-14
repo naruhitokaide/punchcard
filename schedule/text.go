@@ -79,16 +79,13 @@ func mapTextOntoCommitSchedule(text string, schedule *CommitSchedule) {
 
 func buildTextFields(text string) [][][]int {
 	var letters [][][]int
-	space, _ := utils.TranslateLetter(" ")
-	length := len(text)
-	for index, char := range strings.Split(text, "") {
-		letter, _ := utils.TranslateLetter(char)
-		if index == length-1 {
-			letters = append(letters, letter)
-		} else {
-
-			letters = append(letters, letter, space)
-		}
+	if text == "" {
+		return letters
 	}
-	return letters
+	space, _ := utils.TranslateLetter(" ")
+	for _, char := range strings.Split(text, "") {
+		letter, _ := utils.TranslateLetter(char)
+		letters = append(letters, letter, space)
+	}
+	return letters[0 : len(letters)-1] // remove last extra space
 }
