@@ -163,5 +163,17 @@ func TestMapTextOntoCommitSchedule(t *testing.T) {
 }
 
 func TestBuildTextFields(t *testing.T) {
-	// TODO
+	var tests = []struct {
+		text   string
+		length int
+	}{
+		{"hello world", 21}, {"t", 1}, {"", 0},
+	}
+	for _, test := range tests {
+		letters := buildTextFields(test.text)
+		actual := len(letters)
+		if actual != test.length {
+			t.Errorf("Expected length to be %d, but was %d", test.length, actual)
+		}
+	}
 }
