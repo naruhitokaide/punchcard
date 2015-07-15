@@ -21,7 +21,7 @@ func TestBuildCommitSchedule(t *testing.T) {
 		numNotAFieldEntries := 0
 		for _, row := range schedule {
 			for _, entry := range row {
-				if entry != EMPTY && entry != NOT_A_FIELD {
+				if entry.NumCommits != EMPTY { // } && entry != NOT_A_FIELD {
 					t.Errorf("Entry should be EMPTY or NOT_A_FIELD, but was %v", entry)
 				}
 				if entry == NOT_A_FIELD {
@@ -101,6 +101,23 @@ func sliceEqual(sliceA, sliceB []int) bool {
 		}
 	}
 	return true
+}
+
+func TestGetFirstDayOfWeek(t *testing.T) {
+	var tests = []struct {
+		day                  time.Time
+		expectedFirstWeekDay time.Time
+	}{
+		{time.Date(2009, time.November, 10, 0, 0, 0, 0, time.UTC), time.Date(2009, time.November, 8, 0, 0, 0, 0, time.UTC)},
+		{time.Date(2016, time.February, 28, 0, 0, 0, 0, time.UTC), time.Date(2016, time.February, 28, 0, 0, 0, 0, time.UTC)},
+		{time.Date(2013, time.February, 28, 0, 0, 0, 0, time.UTC), time.Date(2013, time.February, 24, 0, 0, 0, 0, time.UTC)},
+	}
+	for _, test := range tests {
+		actual := getFirstDayOfWeek(test.day)
+		if !actual.Equal(test.expectedFirstWeekDay) {
+			t.Errorf("Expected first weekday to be %v, but got %v", actual, test.expectedFirstWeekDay)
+		}
+	}
 }
 
 func TestConnectWeeksToSchedule(t *testing.T) {
