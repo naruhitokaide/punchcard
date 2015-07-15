@@ -17,7 +17,7 @@ const (
 	NUM_WEEK_DAYS = 7
 )
 
-var NOT_A_FIELD ScheduleEntry = ScheduleEntry{}
+var NOT_A_FIELD ScheduleEntry = ScheduleEntry{NumCommits: -1}
 
 // BuildCommitSchedule returns an empty CommitSchedule, where all fiels are
 // initialized with EMPTY except those which are not in the range of days.
@@ -26,6 +26,11 @@ func BuildCommitSchedule(days []time.Time) CommitSchedule {
 	firstWeek := buildFirstWeek(days[0])
 	lastWeek := buildLastWeek(days[len(days)-1])
 	return connectWeeksToSchedule(firstWeek, lastWeek)
+}
+
+// IsNotAField returns true if the given entry has the same datetime as NOT_A_FIELD.
+func IsNotAField(entry ScheduleEntry) bool {
+	return entry.DateTime.Equal(NOT_A_FIELD.DateTime)
 }
 
 // buildFirstWeek creates NUM_WEEK_DAYS schedule entries, where the entries

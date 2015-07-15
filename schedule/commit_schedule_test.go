@@ -5,13 +5,13 @@ import (
 	"time"
 )
 
-var testSunday time.Time = time.Date(2015, time.February, 1, 0, 0, 0, 0, time.UTC)
-var testMonday time.Time = time.Date(2015, time.February, 2, 0, 0, 0, 0, time.UTC)
-var testTuesday time.Time = time.Date(2015, time.February, 3, 0, 0, 0, 0, time.UTC)
-var testWednesday time.Time = time.Date(2015, time.February, 4, 0, 0, 0, 0, time.UTC)
-var testThursday time.Time = time.Date(2015, time.February, 5, 0, 0, 0, 0, time.UTC)
-var testFriday time.Time = time.Date(2015, time.February, 6, 0, 0, 0, 0, time.UTC)
-var testSaturday time.Time = time.Date(2015, time.February, 7, 0, 0, 0, 0, time.UTC)
+var testSunday = time.Date(2015, time.February, 1, 0, 0, 0, 0, time.UTC)
+var testMonday = time.Date(2015, time.February, 2, 0, 0, 0, 0, time.UTC)
+var testTuesday = time.Date(2015, time.February, 3, 0, 0, 0, 0, time.UTC)
+var testWednesday = time.Date(2015, time.February, 4, 0, 0, 0, 0, time.UTC)
+var testThursday = time.Date(2015, time.February, 5, 0, 0, 0, 0, time.UTC)
+var testFriday = time.Date(2015, time.February, 6, 0, 0, 0, 0, time.UTC)
+var testSaturday = time.Date(2015, time.February, 7, 0, 0, 0, 0, time.UTC)
 
 func TestBuildCommitSchedule(t *testing.T) {
 	var tests = []struct {
@@ -43,6 +43,21 @@ func TestBuildCommitSchedule(t *testing.T) {
 				test.numNotAFieldEntries, numNotAFieldEntries)
 		}
 
+	}
+}
+
+func TestIsNotAField(t *testing.T) {
+	var tests = []struct {
+		entry       ScheduleEntry
+		isNotAField bool
+	}{
+		{NOT_A_FIELD, true}, {ScheduleEntry{testMonday, 1}, false},
+	}
+	for _, test := range tests {
+		actual := IsNotAField(test.entry)
+		if actual != test.isNotAField {
+			t.Errorf("Expected IsNotAField to be %b, but was %b", test.isNotAField, actual)
+		}
 	}
 }
 
