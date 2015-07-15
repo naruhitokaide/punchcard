@@ -70,7 +70,7 @@ func mapTextOntoCommitSchedule(text string, schedule *CommitSchedule) {
 	for _, fields := range letters {
 		for rowIndex, row := range fields {
 			for columnIndex, field := range row {
-				schedule[rowIndex][columnIndex+rightShift] = field
+				schedule[rowIndex][columnIndex+rightShift].NumCommits = field
 			}
 			rightShift += len(row)
 		}

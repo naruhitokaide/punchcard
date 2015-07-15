@@ -116,7 +116,7 @@ func addCommitsToSchedule(schedule *CommitSchedule, numCommits int) {
 	for i := 0; i < numCommits; i++ {
 		randRow := rand.Intn(7)
 		randCol := rand.Intn(53)
-		schedule[randCol][randRow] += 1
+		schedule[randCol][randRow].NumCommits += 1
 	}
 }
 
@@ -151,8 +151,8 @@ func TestMapTextOntoCommitSchedule(t *testing.T) {
 		actual := 0
 		for _, row := range schedule {
 			for _, entry := range row {
-				if entry > 0 {
-					actual += entry
+				if entry.NumCommits > 0 {
+					actual += entry.NumCommits
 				}
 			}
 		}

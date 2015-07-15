@@ -5,6 +5,14 @@ import (
 	"time"
 )
 
+var testSunday time.Time = time.Date(2015, time.February, 1, 0, 0, 0, 0, time.UTC)
+var testMonday time.Time = time.Date(2015, time.February, 2, 0, 0, 0, 0, time.UTC)
+var testTuesday time.Time = time.Date(2015, time.February, 3, 0, 0, 0, 0, time.UTC)
+var testWednesday time.Time = time.Date(2015, time.February, 4, 0, 0, 0, 0, time.UTC)
+var testThursday time.Time = time.Date(2015, time.February, 5, 0, 0, 0, 0, time.UTC)
+var testFriday time.Time = time.Date(2015, time.February, 6, 0, 0, 0, 0, time.UTC)
+var testSaturday time.Time = time.Date(2015, time.February, 7, 0, 0, 0, 0, time.UTC)
+
 func TestBuildCommitSchedule(t *testing.T) {
 	var tests = []struct {
 		startDay            time.Time
@@ -21,7 +29,7 @@ func TestBuildCommitSchedule(t *testing.T) {
 		numNotAFieldEntries := 0
 		for _, row := range schedule {
 			for _, entry := range row {
-				if entry.NumCommits != EMPTY { // } && entry != NOT_A_FIELD {
+				if entry.NumCommits != EMPTY && entry != NOT_A_FIELD {
 					t.Errorf("Entry should be EMPTY or NOT_A_FIELD, but was %v", entry)
 				}
 				if entry == NOT_A_FIELD {
@@ -49,54 +57,54 @@ func getTestDays(startDay time.Time) []time.Time {
 
 func TestBuildFirstWeek(t *testing.T) {
 	var tests = []struct {
-		day              time.Weekday
-		expectedSchedule []int
+		day             time.Time
+		expectedCommits []int
 	}{
-		{time.Sunday, []int{0, 0, 0, 0, 0, 0, 0}},
-		{time.Monday, []int{-1, 0, 0, 0, 0, 0, 0}},
-		{time.Tuesday, []int{-1, -1, 0, 0, 0, 0, 0}},
-		{time.Wednesday, []int{-1, -1, -1, 0, 0, 0, 0}},
-		{time.Thursday, []int{-1, -1, -1, -1, 0, 0, 0}},
-		{time.Friday, []int{-1, -1, -1, -1, -1, 0, 0}},
-		{time.Saturday, []int{-1, -1, -1, -1, -1, -1, 0}},
+		{testSunday, []int{0, 0, 0, 0, 0, 0, 0}},
+		{testMonday, []int{-1, 0, 0, 0, 0, 0, 0}},
+		{testTuesday, []int{-1, -1, 0, 0, 0, 0, 0}},
+		{testWednesday, []int{-1, -1, -1, 0, 0, 0, 0}},
+		{testThursday, []int{-1, -1, -1, -1, 0, 0, 0}},
+		{testFriday, []int{-1, -1, -1, -1, -1, 0, 0}},
+		{testSaturday, []int{-1, -1, -1, -1, -1, -1, 0}},
 	}
 	for _, test := range tests {
 		actualSchedule := buildFirstWeek(test.day)
-		if !sliceEqual(actualSchedule, test.expectedSchedule) {
+		if !sliceEqual(actualSchedule, test.expectedCommits) {
 			fmt := "Expected %v as schedule, but got %v"
-			t.Errorf(fmt, test.expectedSchedule, actualSchedule)
+			t.Errorf(fmt, test.expectedCommits, actualSchedule)
 		}
 	}
 }
 
 func TestBuildLastWeek(t *testing.T) {
 	var tests = []struct {
-		day              time.Weekday
-		expectedSchedule []int
+		day             time.Time
+		expectedCommits []int
 	}{
-		{time.Sunday, []int{0, -1, -1, -1, -1, -1, -1}},
-		{time.Monday, []int{0, 0, -1, -1, -1, -1, -1}},
-		{time.Tuesday, []int{0, 0, 0, -1, -1, -1, -1}},
-		{time.Wednesday, []int{0, 0, 0, 0, -1, -1, -1}},
-		{time.Thursday, []int{0, 0, 0, 0, 0, -1, -1}},
-		{time.Friday, []int{0, 0, 0, 0, 0, 0, -1}},
-		{time.Saturday, []int{0, 0, 0, 0, 0, 0, 0}},
+		{testSunday, []int{0, -1, -1, -1, -1, -1, -1}},
+		{testMonday, []int{0, 0, -1, -1, -1, -1, -1}},
+		{testTuesday, []int{0, 0, 0, -1, -1, -1, -1}},
+		{testWednesday, []int{0, 0, 0, 0, -1, -1, -1}},
+		{testThursday, []int{0, 0, 0, 0, 0, -1, -1}},
+		{testFriday, []int{0, 0, 0, 0, 0, 0, -1}},
+		{testSaturday, []int{0, 0, 0, 0, 0, 0, 0}},
 	}
 	for _, test := range tests {
 		actualSchedule := buildLastWeek(test.day)
-		if !sliceEqual(actualSchedule, test.expectedSchedule) {
+		if !sliceEqual(actualSchedule, test.expectedCommits) {
 			fmt := "Expected %v as schedule, but got %v"
-			t.Errorf(fmt, test.expectedSchedule, actualSchedule)
+			t.Errorf(fmt, test.expectedCommits, actualSchedule)
 		}
 	}
 }
 
-func sliceEqual(sliceA, sliceB []int) bool {
-	if len(sliceA) != len(sliceB) {
+func sliceEqual(scheduleEntries []ScheduleEntry, numCommits []int) bool {
+	if len(scheduleEntries) != len(numCommits) {
 		return false
 	}
-	for i := 0; i < len(sliceA); i++ {
-		if sliceA[i] != sliceB[i] {
+	for i := 0; i < len(scheduleEntries); i++ {
+		if scheduleEntries[i].NumCommits != numCommits[i] {
 			return false
 		}
 	}
@@ -122,15 +130,15 @@ func TestGetFirstDayOfWeek(t *testing.T) {
 
 func TestConnectWeeksToSchedule(t *testing.T) {
 	var tests = []struct {
-		firstDay            time.Weekday
-		lastDay             time.Weekday
+		firstDay            time.Time
+		lastDay             time.Time
 		numEntries          int
 		numNotAFieldEntries int
 	}{
-		{time.Sunday, time.Saturday, 371, 0},
-		{time.Monday, time.Saturday, 371, 1},
-		{time.Wednesday, time.Wednesday, 371, 6},
-		{time.Saturday, time.Sunday, 371, 12},
+		{testSunday, testSaturday, 371, 0},
+		{testMonday, testSaturday, 371, 1},
+		{testWednesday, testWednesday, 371, 6},
+		{testSaturday, testSunday, 371, 12},
 	}
 	for _, test := range tests {
 		firstWeek := buildFirstWeek(test.firstDay)
@@ -140,7 +148,7 @@ func TestConnectWeeksToSchedule(t *testing.T) {
 		numNotAFieldEntries := 0
 		for _, row := range schedule {
 			for _, entry := range row {
-				if entry != EMPTY && entry != NOT_A_FIELD {
+				if entry.NumCommits != EMPTY && entry != NOT_A_FIELD {
 					t.Errorf("Entry should be EMPTY or NOT_A_FIELD, but was %v", entry)
 				}
 				if entry == NOT_A_FIELD {
