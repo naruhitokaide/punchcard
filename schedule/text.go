@@ -28,6 +28,8 @@ func TextSchedule(text string, repo git.Git, filegen utils.FileGenerator) error 
 	return err
 }
 
+// getTextCommitSchedule returns a []Commit or an error if the given text will
+// not fit onto the CommitSchedule.
 func getTextCommitSchedule(text string, days []time.Time, messageBase []string) ([]Commit, error) {
 	if !textFits(text) {
 		return nil, errors.New("Text does not fit.")
@@ -37,6 +39,7 @@ func getTextCommitSchedule(text string, days []time.Time, messageBase []string) 
 	return commits, nil
 }
 
+// textFits checks wether or not the text will fit onto a CommitSchedule.
 func textFits(text string) bool {
 	textWidth := getTextWidth(text)
 	textIsNotToWide := textWidth <= SCHEDULE_WIDTH-2 // adjust for margins
@@ -44,13 +47,14 @@ func textFits(text string) bool {
 	return textIsNotEmpty && textIsNotToWide
 }
 
+// getTextWidth returns the width the text will need if put onto the CommitSchedule.
 func getTextWidth(text string) int {
 	width := 0
 	for _, char := range strings.Split(text, "") {
 		letter, _ := utils.TranslateLetter(char)
 		width += len(letter[0]) + 1 // adjust for space between letters
 	}
-	return width - 1 // last letter does not need and extra space
+	return width - 1 // last letter does not need an extra space
 }
 
 func convertScheduleToCommits(schedule CommitSchedule) []Commit {
