@@ -81,6 +81,7 @@ func mapTextOntoCommitSchedule(text string, schedule *CommitSchedule) {
 	}
 }
 
+// buildTextFields return [][][]int representation of the given text.
 func buildTextFields(text string) [][][]int {
 	var letters [][][]int
 	if text == "" {
