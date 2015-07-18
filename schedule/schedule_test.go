@@ -75,3 +75,29 @@ func TestGetDaysSinceDateMinusOneYear(t *testing.T) {
 		}
 	}
 }
+
+func TestGetDaysSinceNowMinusOneYear(t *testing.T) {
+
+	actual := GetDaysSinceNowMinusOneYear()
+	length := 0
+	var actualLastDate time.Time
+	for _, day := range actual {
+		actualLastDate = day
+		length++
+	}
+	if length != 366 && length != 367 {
+		fmt := "len(GetDaysSinceNowMinusOneYear()) should be 366 or 367; but was %d"
+		t.Errorf(fmt, length)
+	}
+	today := time.Now()
+	if !assertEqualDates(today, actualLastDate) {
+		fmt := "Last day should be equal to %v (now) but was %v"
+		t.Errorf(fmt, today, actualLastDate)
+
+	}
+}
+
+func assertEqualDates(dayOne, dayTwo time.Time) bool {
+	return dayOne.Day() == dayTwo.Day() && dayOne.Month() == dayTwo.Month() &&
+		dayOne.Year() == dayTwo.Year()
+}
