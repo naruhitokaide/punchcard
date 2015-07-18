@@ -80,6 +80,7 @@ func convertScheduleToCommits(schedule CommitSchedule) []Commit {
 		for _, entry := range row {
 			for commit := range GenerateRandomCommits(entry.DateTime, entry.NumCommits, messageBase) {
 				commits = append(commits, commit)
+
 			}
 		}
 	}
@@ -96,7 +97,7 @@ func buildTextCommitSchedule(days []time.Time, text string) CommitSchedule {
 // mapTextOntoCommitSchedule will put text onto a CommitSchedule.
 func mapTextOntoCommitSchedule(text string, schedule *CommitSchedule) {
 	letters := buildTextFields(text)
-	rightShift := 0
+	rightShift := 1 // adjust for left margin
 	for _, fields := range letters {
 		for rowIndex, row := range fields {
 			for columnIndex, field := range row {
