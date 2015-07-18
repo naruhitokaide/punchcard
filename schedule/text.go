@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/0xfoo/punchcard/git"
 	"github.com/0xfoo/punchcard/utils"
+	// "log"
 	"strings"
 	"time"
 )
@@ -57,17 +58,28 @@ func getTextWidth(text string) int {
 	return width - 1 // last letter does not need an extra space
 }
 
+// convertScheduleToCommits creates NumCommits commits for every entry.
 func convertScheduleToCommits(schedule CommitSchedule) []Commit {
 	var commits []Commit
+	messageBase := GetCommitMessageBase()
+	for _, row := range schedule {
+		for _, entry := range row {
+			for commit := range GenerateRandomCommits(entry.DateTime, entry.NumCommits, messageBase) {
+				commits = append(commits, commit)
+			}
+		}
+	}
 	return commits
 }
 
+// buildTextCommitSchedule returns a CommitSchedule representing the given text.
 func buildTextCommitSchedule(days []time.Time, text string) CommitSchedule {
 	schedule := BuildCommitSchedule(days)
 	mapTextOntoCommitSchedule(text, &schedule)
 	return schedule
 }
 
+// mapTextOntoCommitSchedule will put text onto a CommitSchedule.
 func mapTextOntoCommitSchedule(text string, schedule *CommitSchedule) {
 	letters := buildTextFields(text)
 	rightShift := 0
