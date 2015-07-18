@@ -76,6 +76,7 @@ func getFirstDayOfWeek(day time.Time) time.Time {
 // filling in the weeks inbetween and initializing everything inbetween with EMPTY
 func connectWeeksToSchedule(firstWeek, lastWeek []ScheduleEntry) CommitSchedule {
 	schedule := new(CommitSchedule)
+	var day = firstWeek[len(firstWeek)-1].DateTime
 	for row_index, row := range schedule {
 		for column_index, _ := range row {
 			if column_index == 0 {
@@ -83,8 +84,8 @@ func connectWeeksToSchedule(firstWeek, lastWeek []ScheduleEntry) CommitSchedule 
 			} else if column_index == 52 {
 				schedule[row_index][column_index] = lastWeek[row_index]
 			} else {
-				// FIXME use correct date and adjust on iteration
-				schedule[row_index][column_index] = ScheduleEntry{}
+				day = day.AddDate(0, 0, 1)
+				schedule[row_index][column_index] = ScheduleEntry{day, EMPTY}
 			}
 		}
 	}
