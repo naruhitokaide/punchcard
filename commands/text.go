@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	DEFAULT_TEXT = "HELLO WORLD"
+	DEFAULT_TEXT = "HELLO"
 )
 
 var text string
