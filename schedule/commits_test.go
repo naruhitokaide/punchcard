@@ -6,6 +6,24 @@ import (
 	"time"
 )
 
+func TestGetRandomCommit(t *testing.T) {
+	var tests = []struct{ day time.Time }{
+		{time.Date(2009, time.November, 10, 0, 0, 0, 0, time.UTC)},
+		{time.Date(2016, time.February, 28, 0, 0, 0, 0, time.UTC)},
+	}
+	messageBase := GetCommitMessageBase()
+	for _, test := range tests {
+		actual := GetRandomCommit(test.day, messageBase)
+		if test.day.Day() != actual.DateTime.Day() {
+			fmt := "GetRandomCommit should be on %v, but was %v"
+			t.Errorf(fmt, test.day, actual.DateTime)
+		}
+		if len(actual.Message) < 0 {
+			t.Error("GetRandomCommit should return a commit with a non empty message.")
+		}
+	}
+}
+
 func TestGetRandomNumber(t *testing.T) {
 	var tests = []struct {
 		min int
@@ -16,7 +34,7 @@ func TestGetRandomNumber(t *testing.T) {
 	for _, test := range tests {
 		actual := GetRandomNumber(test.min, test.max)
 		if test.min > actual || actual > test.max {
-			fmt := "BetRandomNumber(%d, %d) == %d; not min <= actual <= max"
+			fmt := "GetRandomNumber(%d, %d) == %d; not min <= actual <= max"
 			t.Errorf(fmt, test.min, test.max, actual)
 		}
 	}

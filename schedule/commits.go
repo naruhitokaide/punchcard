@@ -25,14 +25,20 @@ func GenerateRandomCommits(day time.Time, numCommits int, messageBase []string) 
 	commitChannel := make(chan Commit)
 	go func() {
 		for i := 0; i < numCommits; i++ {
-			commitChannel <- Commit{
-				DateTime: getRandomTime(day),
-				Message:  getRandomCommitMessage(messageBase, MAX_COMMIT_MESSAGE_LENGTH),
-			}
+			commitChannel <- GetRandomCommit(day, messageBase)
 		}
 		close(commitChannel)
 	}()
 	return commitChannel
+}
+
+// GetRandomCommit returns a commit with a randomly selected string from the
+// given message base and a commit time, based on the given day.
+func GetRandomCommit(day time.Time, messageBase []string) Commit {
+	return Commit{
+		DateTime: getRandomTime(day),
+		Message:  getRandomCommitMessage(messageBase, MAX_COMMIT_MESSAGE_LENGTH),
+	}
 }
 
 // GetRandomNumber returns a number in the range of min and max.
