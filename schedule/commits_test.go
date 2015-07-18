@@ -41,7 +41,7 @@ func TestGetRandomNumber(t *testing.T) {
 }
 
 func TestGetRandomCommitMessage(t *testing.T) {
-	var tests = []struct{ length int }{{1}, {2}, {4}, {8}}
+	var tests = []struct{ length int }{{2}, {4}, {8}}
 	messageBase := GetCommitMessageBase()
 	for _, test := range tests {
 		actual := getRandomCommitMessage(messageBase, test.length)
