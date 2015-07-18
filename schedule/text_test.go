@@ -94,7 +94,7 @@ func TestGetTextWidth(t *testing.T) {
 	}
 }
 
-func XTestConvertScheduleToCommits(t *testing.T) {
+func TestConvertScheduleToCommits(t *testing.T) {
 	var tests = []struct {
 		numCommits int
 	}{
@@ -115,12 +115,12 @@ func XTestConvertScheduleToCommits(t *testing.T) {
 func addCommitsToSchedule(schedule *CommitSchedule, numCommits int) {
 	for i := 0; i < numCommits; i++ {
 		randRow := rand.Intn(7)
-		randCol := rand.Intn(53)
-		schedule[randCol][randRow].NumCommits += 1
+		randCol := rand.Intn(51) // avoid getting a NOT_A_FIELD field in the margins
+		schedule[randRow][randCol+1].NumCommits += 1
 	}
 }
 
-func XTestBuildTextCommitSchedule(t *testing.T) {
+func TestBuildTextCommitSchedule(t *testing.T) {
 	var tests = []struct {
 		text       string
 		numCommits int
@@ -129,8 +129,8 @@ func XTestBuildTextCommitSchedule(t *testing.T) {
 	}
 	for _, test := range tests {
 		days := GetDaysSinceNowMinusOneYear()
-		commits := buildTextCommitSchedule(days, test.text)
-		actual := len(commits)
+		schedule := buildTextCommitSchedule(days, test.text)
+		actual := getSumCommits(schedule)
 		if actual != test.numCommits {
 			t.Errorf("Expected width to be %d, but was %d", test.numCommits, actual)
 		}
