@@ -60,19 +60,20 @@ func TestGetTextCommitSchedule(t *testing.T) {
 	}
 }
 
-func TestTextFits(t *testing.T) {
+func TestCheckText(t *testing.T) {
 	var tests = []struct {
-		text        string
-		isPrintable bool
+		text     string
+		hasError bool
 	}{
-		{"hello", true},
-		{"", false},
-		{"this is to long to print", false},
+		{"hello", false},
+		{"", true},
+		{"this is to long to print", true},
+		{".;", true},
 	}
 	for _, test := range tests {
-		actual := textFits(test.text)
-		if actual != test.isPrintable {
-			t.Errorf("Expected check to be %v, but was %v", test.isPrintable, actual)
+		actual := checkText(test.text)
+		if (actual == nil) == test.hasError {
+			t.Errorf("Expected check to be %v, but was %v", test.hasError, actual)
 		}
 	}
 }

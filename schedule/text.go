@@ -4,12 +4,14 @@ import (
 	"errors"
 	"github.com/0xfoo/punchcard/git"
 	"github.com/0xfoo/punchcard/utils"
+	"regexp"
 	"strings"
 	"time"
 )
 
 const (
 	SCHEDULE_WIDTH = 53
+	TEXT_REGEX     = "[a-z ]{1,26}"
 )
 
 // TextSchedule creates commits over the past 365/366 days to build the given text.
@@ -31,20 +33,33 @@ func TextSchedule(text string, repo git.Git, filegen utils.FileGenerator) error 
 // getTextCommitSchedule returns a []Commit or an error if the given text will
 // not fit onto the CommitSchedule.
 func getTextCommitSchedule(text string, days []time.Time, messageBase []string) ([]Commit, error) {
-	if !textFits(text) {
-		return nil, errors.New("Text does not fit.")
+	text = parseStringForTranslation(text)
+	if err := checkText(text); err != nil {
+		return nil, err
 	}
 	schedule := buildTextCommitSchedule(days, text)
 	commits := convertScheduleToCommits(schedule)
 	return commits, nil
 }
 
-// textFits checks wether or not the text will fit onto a CommitSchedule.
-func textFits(text string) bool {
+// parseStringForTranslation returns a the text in lower case.
+// also removing leading and trailing spaces.
+func parseStringForTranslation(text string) string {
+	return strings.ToLower(strings.TrimSpace(text))
+}
+
+// checkText checks wether or not the text will fit onto a CommitSchedule.
+func checkText(text string) error {
+	if matched, _ := regexp.MatchString(TEXT_REGEX, text); !matched {
+		return errors.New("Text can only contain letters and spaces (not only spaces).")
+	}
 	textWidth := getTextWidth(text)
 	textIsNotToWide := textWidth <= SCHEDULE_WIDTH-2 // adjust for margins
 	textIsNotEmpty := textWidth > 0
-	return textIsNotEmpty && textIsNotToWide
+	if !(textIsNotEmpty && textIsNotToWide) {
+		return errors.New("Text does not fit.")
+	}
+	return nil
 }
 
 // getTextWidth returns the width the text will need if put onto the CommitSchedule.
