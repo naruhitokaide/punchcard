@@ -5,13 +5,13 @@ import (
 	"testing"
 )
 
-func XTestTextSchedule(t *testing.T) {
+func TestTextSchedule(t *testing.T) {
 	var tests = []struct {
 		text        string
 		numCommits  int
 		isPrintable bool
 	}{
-		{"hello", 123, true}, // TODO replace with actual number of commits
+		{"hello", 62, true},
 		{"", 0, false},
 		{"this is to long to print", 0, false},
 	}
@@ -33,13 +33,13 @@ func XTestTextSchedule(t *testing.T) {
 	}
 }
 
-func XTestGetTextCommitSchedule(t *testing.T) {
+func TestGetTextCommitSchedule(t *testing.T) {
 	var tests = []struct {
 		text        string
 		numCommits  int
 		isPrintable bool
 	}{
-		{"hello", 123, true}, // TODO replace with actual number of commits
+		{"hello", 62, true},
 		{"", 0, false},
 		{"this is to long to print", 0, false},
 	}

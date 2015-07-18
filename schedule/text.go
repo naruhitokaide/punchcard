@@ -4,7 +4,6 @@ import (
 	"errors"
 	"github.com/0xfoo/punchcard/git"
 	"github.com/0xfoo/punchcard/utils"
-	// "log"
 	"strings"
 	"time"
 )
