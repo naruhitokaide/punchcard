@@ -148,18 +148,23 @@ func TestMapTextOntoCommitSchedule(t *testing.T) {
 		days := GetDaysSinceNowMinusOneYear()
 		schedule := BuildCommitSchedule(days)
 		mapTextOntoCommitSchedule(test.text, &schedule)
-		actual := 0
-		for _, row := range schedule {
-			for _, entry := range row {
-				if entry.NumCommits > 0 {
-					actual += entry.NumCommits
-				}
-			}
-		}
+		actual := getSumCommits(schedule)
 		if actual != test.numPixels {
 			t.Errorf("Expected width to be %d, but was %d", test.numPixels, actual)
 		}
 	}
+}
+
+func getSumCommits(schedule CommitSchedule) int {
+	sum := 0
+	for _, row := range schedule {
+		for _, entry := range row {
+			if entry.NumCommits > 0 {
+				sum += entry.NumCommits
+			}
+		}
+	}
+	return sum
 }
 
 func TestBuildTextFields(t *testing.T) {
