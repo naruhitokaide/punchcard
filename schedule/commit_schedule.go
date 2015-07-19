@@ -1,6 +1,8 @@
 package schedule
 
 import (
+	"bytes"
+	"fmt"
 	"time"
 )
 
@@ -12,7 +14,6 @@ type ScheduleEntry struct {
 }
 
 const (
-	// NOT_A_FIELD   = -1
 	EMPTY         = 0
 	NUM_WEEK_DAYS = 7
 )
@@ -77,17 +78,38 @@ func getFirstDayOfWeek(day time.Time) time.Time {
 func connectWeeksToSchedule(firstWeek, lastWeek []ScheduleEntry) CommitSchedule {
 	schedule := new(CommitSchedule)
 	var day = firstWeek[len(firstWeek)-1].DateTime
-	for row_index, row := range schedule {
-		for column_index, _ := range row {
-			if column_index == 0 {
-				schedule[row_index][column_index] = firstWeek[row_index]
-			} else if column_index == 52 {
-				schedule[row_index][column_index] = lastWeek[row_index]
+	// var adjustedDay time.Time
+	for rowIndex, row := range schedule {
+		for columnIndex, _ := range row {
+			if columnIndex == 0 {
+				schedule[rowIndex][columnIndex] = firstWeek[rowIndex]
+			} else if columnIndex == 52 {
+				schedule[rowIndex][columnIndex] = lastWeek[rowIndex]
 			} else {
-				day = day.AddDate(0, 0, 1)
-				schedule[row_index][column_index] = ScheduleEntry{day, EMPTY}
+				adjustedDay := day.AddDate(0, 0, getDeltaDays(rowIndex, columnIndex))
+				schedule[rowIndex][columnIndex] = ScheduleEntry{adjustedDay, EMPTY}
 			}
 		}
 	}
 	return *schedule
+}
+
+// getDeltaDays returns the day which need to be added to the last day of the
+// first week to get the date for the position at (rowIndex, columnIndes).
+func getDeltaDays(rowIndex, columnIndex int) int {
+	return columnIndex*7 - (6 - rowIndex)
+}
+
+// String returns a string representing the CommitSchedule.
+func (schedule CommitSchedule) String() string {
+	var buffer bytes.Buffer
+	for _, row := range schedule {
+		for _, entry := range row {
+			// entryString := fmt.Sprintf("(%s,%d) ", entry.DateTime.String(), entry.NumCommits)
+			entryString := fmt.Sprintf("(%s,%d) ", entry.DateTime.Weekday().String(), entry.NumCommits)
+			buffer.WriteString(entryString)
+		}
+		buffer.WriteString("\n")
+	}
+	return buffer.String()
 }
