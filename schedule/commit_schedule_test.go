@@ -183,3 +183,28 @@ func TestConnectWeeksToSchedule(t *testing.T) {
 		}
 	}
 }
+
+func TestGetDeltaDays(t *testing.T) {
+	var tests = []struct {
+		rowIndex      int
+		columnIndex   int
+		expectedDelta int
+	}{
+		{0, 1, 1}, {1, 2, 9}, {3, 10, 67},
+	}
+	for _, test := range tests {
+		actual := getDeltaDays(test.rowIndex, test.columnIndex)
+		if actual != test.expectedDelta {
+			t.Errorf("Expected %d days, but got %d.", test.expectedDelta, actual)
+		}
+	}
+}
+
+func TestString(t *testing.T) {
+	testDay := time.Date(2009, time.November, 9, 0, 0, 0, 0, time.UTC)
+	days := getTestDays(testDay)
+	schedule := BuildCommitSchedule(days)
+	if len(schedule.String()) < 1 {
+		t.Error("Expected schedule string was empty.")
+	}
+}
