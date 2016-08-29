@@ -2,7 +2,13 @@ package schedule
 
 import (
 	"testing"
+	"time"
 )
+
+func getNumDaysInThisYear() int {
+	lastDayOfTheYear := time.Date(time.Now().Year(), time.December, 31, 0, 0, 0, 0, time.UTC)
+	return lastDayOfTheYear.YearDay()
+}
 
 func TestRandomSchedule(t *testing.T) {
 	var tests = []struct {
@@ -22,9 +28,10 @@ func TestRandomSchedule(t *testing.T) {
 		if git.numAddCalls != git.numCommitCalls {
 			t.Error("Add calls should happen as often as commit calls.")
 		}
-		if test.min*366 > git.numCommitCalls || test.max*366 < git.numCommitCalls {
+		days := getNumDaysInThisYear() + 1
+		if test.min*days > git.numCommitCalls || test.max*days < git.numCommitCalls {
 			fmt := "Total commits should be between %d and %d, but was %d"
-			t.Errorf(fmt, test.min*366, test.max*366, git.numCommitCalls)
+			t.Errorf(fmt, test.min*days, test.max*days, git.numCommitCalls)
 		}
 	}
 }
