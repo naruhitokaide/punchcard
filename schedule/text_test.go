@@ -117,7 +117,7 @@ func addCommitsToSchedule(schedule *CommitSchedule, numCommits int) {
 	for i := 0; i < numCommits; i++ {
 		randRow := rand.Intn(7)
 		randCol := rand.Intn(51) // avoid getting a NOT_A_FIELD field in the margins
-		schedule[randRow][randCol+1].NumCommits += 1
+		schedule[randRow][randCol+1].NumCommits++
 	}
 }
 
