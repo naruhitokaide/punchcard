@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	MIN_COMMITS_DEFAULT = 1
-	MAX_COMMITS_DEFAULT = 10
+	minCommitsDefault = 1
+	maxCommitsDefault = 10
 )
 
 var minCommits, maxCommits int
@@ -35,9 +35,9 @@ func randomRun(cmd *cobra.Command, args []string) {
 
 // init initializes flags with defaults and add randomCmd to main cmd.
 func init() {
-	randomCmd.Flags().IntVar(&minCommits, "min", MIN_COMMITS_DEFAULT,
+	randomCmd.Flags().IntVar(&minCommits, "min", minCommitsDefault,
 		"minimal #commits on a given day.")
-	randomCmd.Flags().IntVar(&maxCommits, "max", MAX_COMMITS_DEFAULT,
+	randomCmd.Flags().IntVar(&maxCommits, "max", maxCommitsDefault,
 		"maximal #commits on a given day.")
 	PunchCardCmd.AddCommand(randomCmd)
 }

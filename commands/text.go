@@ -8,9 +8,7 @@ import (
 	"log"
 )
 
-const (
-	DEFAULT_TEXT = "HELLO"
-)
+const defaultText = "HELLO"
 
 var text string
 
@@ -37,7 +35,7 @@ func textRun(cmd *cobra.Command, args []string) {
 
 // init initializes flags with default text and add textCmd to main cmd.
 func init() {
-	textCmd.Flags().StringVar(&text, "text", DEFAULT_TEXT,
+	textCmd.Flags().StringVar(&text, "text", defaultText,
 		"text which will build using commits")
 	PunchCardCmd.AddCommand(textCmd)
 }

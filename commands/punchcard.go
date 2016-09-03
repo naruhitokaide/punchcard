@@ -5,12 +5,16 @@ import (
 )
 
 const (
-	VERSION          = "0.1.0"
-	DEFAULT_LOCATION = "."
+	// VERSION of this tool
+	VERSION = "0.1.0"
+	// DefaultLocation is the current working directory
+	DefaultLocation = "."
 )
 
+// Location where the git repo will be created
 var Location string
 
+// PunchCardCmd is the command line tool setup
 var PunchCardCmd = &cobra.Command{
 	Use:   "punchcard",
 	Short: "Punchcard is a fun tool to create fake git commits.",
@@ -20,6 +24,6 @@ The larger purpose is to have fun with contribution graphs, punchcards etc.`,
 }
 
 func init() {
-	PunchCardCmd.PersistentFlags().StringVar(&Location, "location", DEFAULT_LOCATION,
+	PunchCardCmd.PersistentFlags().StringVar(&Location, "location", DefaultLocation,
 		"location where the git repo will be initialized")
 }
