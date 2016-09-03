@@ -6,9 +6,9 @@ import (
 	"time"
 )
 
-type CommitSchedule [7][53]ScheduleEntry
+type CommitSchedule [7][53]Entry
 
-type ScheduleEntry struct {
+type Entry struct {
 	DateTime   time.Time
 	NumCommits int
 }
@@ -18,7 +18,7 @@ const (
 	NUM_WEEK_DAYS = 7
 )
 
-var NOT_A_FIELD ScheduleEntry = ScheduleEntry{NumCommits: -1}
+var NOT_A_FIELD = Entry{NumCommits: -1}
 
 // BuildCommitSchedule returns an empty CommitSchedule, where all fiels are
 // initialized with EMPTY except those which are not in the range of days.
@@ -30,20 +30,20 @@ func BuildCommitSchedule(days []time.Time) CommitSchedule {
 }
 
 // IsNotAField returns true if the given entry has the same datetime as NOT_A_FIELD.
-func IsNotAField(entry ScheduleEntry) bool {
+func IsNotAField(entry Entry) bool {
 	return entry.DateTime.Equal(NOT_A_FIELD.DateTime)
 }
 
 // buildFirstWeek creates NUM_WEEK_DAYS schedule entries, where the entries
 // before the given week day are NOT_A_FIELD and EMPTY afterwards (including given day)
-func buildFirstWeek(day time.Time) []ScheduleEntry {
-	var firstWeek []ScheduleEntry
+func buildFirstWeek(day time.Time) []Entry {
+	var firstWeek []Entry
 	weekday := day.Weekday()
 	for i := 0; i < NUM_WEEK_DAYS; i++ {
 		if i < int(weekday) {
 			firstWeek = append(firstWeek, NOT_A_FIELD)
 		} else {
-			firstWeek = append(firstWeek, ScheduleEntry{day, EMPTY})
+			firstWeek = append(firstWeek, Entry{day, EMPTY})
 			day = day.AddDate(0, 0, 1)
 		}
 	}
@@ -52,15 +52,15 @@ func buildFirstWeek(day time.Time) []ScheduleEntry {
 
 // buildLastWeek creates NUM_WEEK_DAYS schedule entries, where the entries
 // after the given week day are NOT_A_FIELD and EMPTY before (including given day)
-func buildLastWeek(day time.Time) []ScheduleEntry {
-	var lastWeek []ScheduleEntry
+func buildLastWeek(day time.Time) []Entry {
+	var lastWeek []Entry
 	weekday := day.Weekday()
 	day = getFirstDayOfWeek(day)
 	for i := 0; i < NUM_WEEK_DAYS; i++ {
 		if i > int(weekday) {
 			lastWeek = append(lastWeek, NOT_A_FIELD)
 		} else {
-			lastWeek = append(lastWeek, ScheduleEntry{day, EMPTY})
+			lastWeek = append(lastWeek, Entry{day, EMPTY})
 			day = day.AddDate(0, 0, 1)
 		}
 	}
@@ -75,19 +75,19 @@ func getFirstDayOfWeek(day time.Time) time.Time {
 
 // connectWeeksToSchedule creates a CommitSchedule, by first and last week,
 // filling in the weeks inbetween and initializing everything inbetween with EMPTY
-func connectWeeksToSchedule(firstWeek, lastWeek []ScheduleEntry) CommitSchedule {
+func connectWeeksToSchedule(firstWeek, lastWeek []Entry) CommitSchedule {
 	schedule := new(CommitSchedule)
 	var day = firstWeek[len(firstWeek)-1].DateTime
 	// var adjustedDay time.Time
 	for rowIndex, row := range schedule {
-		for columnIndex, _ := range row {
+		for columnIndex := range row {
 			if columnIndex == 0 {
 				schedule[rowIndex][columnIndex] = firstWeek[rowIndex]
 			} else if columnIndex == 52 {
 				schedule[rowIndex][columnIndex] = lastWeek[rowIndex]
 			} else {
 				adjustedDay := day.AddDate(0, 0, getDeltaDays(rowIndex, columnIndex))
-				schedule[rowIndex][columnIndex] = ScheduleEntry{adjustedDay, EMPTY}
+				schedule[rowIndex][columnIndex] = Entry{adjustedDay, EMPTY}
 			}
 		}
 	}

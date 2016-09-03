@@ -48,15 +48,15 @@ func TestBuildCommitSchedule(t *testing.T) {
 
 func TestIsNotAField(t *testing.T) {
 	var tests = []struct {
-		entry       ScheduleEntry
+		entry       Entry
 		isNotAField bool
 	}{
-		{NOT_A_FIELD, true}, {ScheduleEntry{testMonday, 1}, false},
+		{NOT_A_FIELD, true}, {Entry{testMonday, 1}, false},
 	}
 	for _, test := range tests {
 		actual := IsNotAField(test.entry)
 		if actual != test.isNotAField {
-			t.Errorf("Expected IsNotAField to be %b, but was %b", test.isNotAField, actual)
+			t.Errorf("Expected IsNotAField to be %t, but was %t", test.isNotAField, actual)
 		}
 	}
 }
@@ -114,7 +114,7 @@ func TestBuildLastWeek(t *testing.T) {
 	}
 }
 
-func sliceEqual(scheduleEntries []ScheduleEntry, numCommits []int) bool {
+func sliceEqual(scheduleEntries []Entry, numCommits []int) bool {
 	if len(scheduleEntries) != len(numCommits) {
 		return false
 	}
