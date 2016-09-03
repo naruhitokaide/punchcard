@@ -6,15 +6,18 @@ import (
 	"os/exec"
 )
 
-// permission to create a directory and read/write in it
+// PERM is the permission to create a directory/file for which the user
+// the user is allowed to read from/write to it.
 const PERM = 0755
 
+// Git is a simple interface the git command line tool.
 type Git interface {
 	Init()
 	Add(filename string)
 	Commit(msg, date string)
 }
 
+// Repo represents a git repository by a given location.
 type Repo struct {
 	Location string
 }
@@ -31,26 +34,38 @@ func (git Repo) Init() {
 	}
 }
 
-// Add wraps the git add call and will change into the location of the git repo
-// add the file given by name and change back to the previous directory.
-func (git Repo) Add(filename string) {
-	currentDir, _ := os.Getwd()
-	os.Chdir(git.Location)
-	err := exec.Command("git", "add", filename).Run()
+func getCwd() string {
+	currentWorkingDirectory, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
 	}
-	os.Chdir(currentDir)
+	return currentWorkingDirectory
+}
+
+func changeDir(newDir string) {
+	if err := os.Chdir(newDir); err != nil {
+		log.Fatal(err)
+	}
+}
+
+// Add wraps the git add call and will change into the location of the git repo
+// add the file given by name and change back to the previous directory.
+func (git Repo) Add(filename string) {
+	currentDir := getCwd()
+	changeDir(git.Location)
+	if err := exec.Command("git", "add", filename).Run(); err != nil {
+		log.Fatal(err)
+	}
+	changeDir(currentDir)
 }
 
 // Commit will change into the location of the git repo and execute git commit
 // with a message and date and change back to the previous directory.
 func (git Repo) Commit(message, date string) {
-	currentDir, _ := os.Getwd()
-	os.Chdir(git.Location)
-	err := exec.Command("git", "commit", "-m", message, "--date", date).Run()
-	if err != nil {
+	currentDir := getCwd()
+	changeDir(git.Location)
+	if err := exec.Command("git", "commit", "-m", message, "--date", date).Run(); err != nil {
 		log.Fatal(err)
 	}
-	os.Chdir(currentDir)
+	changeDir(currentDir)
 }

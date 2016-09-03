@@ -15,6 +15,12 @@ const (
 	TESTDATE    = "2005-04-07T22:13:13"
 )
 
+func cleanup(directory string, t *testing.T) {
+	if err := os.RemoveAll(directory); err != nil {
+		t.Errorf("Failed to remove the directory (%s) during cleanup", directory)
+	}
+}
+
 func TestCreation(t *testing.T) {
 	testDir := getTestDir()
 	git := Repo{testDir}
@@ -30,7 +36,7 @@ func TestInit(t *testing.T) {
 	if !exists(filepath.Join(testDir, ".git")) {
 		t.Error("After git init, there should be a .git dir.")
 	}
-	os.RemoveAll(testDir)
+	cleanup(testDir, t)
 }
 
 func TestAdd(t *testing.T) {
@@ -41,7 +47,7 @@ func TestAdd(t *testing.T) {
 	if !exists(filepath.Join(testDir, ".git", "index")) {
 		t.Error("After the first git add, there should be an index file.")
 	}
-	os.RemoveAll(testDir)
+	cleanup(testDir, t)
 }
 
 func TestCommit(t *testing.T) {
@@ -56,7 +62,7 @@ func TestCommit(t *testing.T) {
 	if !containsMessage(log) {
 		t.Error("After commiting the commit message should be in the logs.")
 	}
-	os.RemoveAll(testDir)
+	cleanup(testDir, t)
 }
 
 func containsMessage(logPath string) bool {
