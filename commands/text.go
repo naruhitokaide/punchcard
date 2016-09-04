@@ -1,11 +1,12 @@
 package commands
 
 import (
+	"log"
+
 	"github.com/0xfoo/punchcard/git"
 	"github.com/0xfoo/punchcard/schedule"
 	"github.com/0xfoo/punchcard/utils"
 	"github.com/spf13/cobra"
-	"log"
 )
 
 const defaultText = "HELLO"

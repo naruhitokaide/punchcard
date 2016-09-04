@@ -1,9 +1,10 @@
 package schedule
 
 import (
+	"time"
+
 	"github.com/0xfoo/punchcard/git"
 	"github.com/0xfoo/punchcard/utils"
-	"time"
 )
 
 // RandomSchedule creates random commits over the past 365/366 days.

@@ -2,11 +2,12 @@ package schedule
 
 import (
 	"errors"
-	"github.com/0xfoo/punchcard/git"
-	"github.com/0xfoo/punchcard/utils"
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/0xfoo/punchcard/git"
+	"github.com/0xfoo/punchcard/utils"
 )
 
 const (

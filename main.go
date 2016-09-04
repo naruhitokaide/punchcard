@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/0xfoo/punchcard/commands"
 	"log"
+
+	"github.com/0xfoo/punchcard/commands"
 )
 
 func main() {
