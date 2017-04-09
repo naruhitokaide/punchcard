@@ -3,9 +3,9 @@ package commands
 import (
 	"log"
 
-	"github.com/0xfoo/punchcard/git"
-	"github.com/0xfoo/punchcard/schedule"
-	"github.com/0xfoo/punchcard/utils"
+	"github.com/rtzll/punchcard/git"
+	"github.com/rtzll/punchcard/schedule"
+	"github.com/rtzll/punchcard/utils"
 	"github.com/spf13/cobra"
 )
 

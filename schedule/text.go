@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/0xfoo/punchcard/git"
-	"github.com/0xfoo/punchcard/utils"
+	"github.com/rtzll/punchcard/git"
+	"github.com/rtzll/punchcard/utils"
 )
 
 const (

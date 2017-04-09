@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/0xfoo/punchcard/commands"
+	"github.com/rtzll/punchcard/commands"
 )
 
 func main() {
