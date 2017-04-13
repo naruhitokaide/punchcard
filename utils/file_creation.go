@@ -23,8 +23,8 @@ func (f RandomFileGenerator) CreateFile() (filename string, err error) {
 	filename = strconv.Itoa(time.Now().Nanosecond())
 	file, err := os.Create(filepath.Join(f.Location, filename))
 	if err != nil {
-		return
+		return "", err
 	}
 	err = file.Close()
-	return
+	return filename, err
 }

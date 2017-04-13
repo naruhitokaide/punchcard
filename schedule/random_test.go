@@ -38,8 +38,8 @@ func TestRandomSchedule(t *testing.T) {
 
 type MockFileGenerator struct{}
 
-func (m MockFileGenerator) CreateFile() string {
-	return ""
+func (m MockFileGenerator) CreateFile() (string, error) {
+	return "", nil
 }
 
 type MockGit struct {

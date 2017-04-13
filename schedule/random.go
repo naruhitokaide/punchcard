@@ -16,7 +16,9 @@ func RandomSchedule(min, max int, repo git.Git, filegen utils.FileGenerator) {
 		numCommits := GetRandomNumber(min, max)
 		commits := GenerateRandomCommits(day, numCommits, messageBase)
 		for commit := range commits {
-			repo.Add(filegen.CreateFile())
+			// TODO handle error
+			f, _ := filegen.CreateFile()
+			repo.Add(f)
 			repo.Commit(commit.Message, commit.DateTime.String())
 		}
 	}

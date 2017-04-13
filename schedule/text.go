@@ -11,8 +11,10 @@ import (
 )
 
 const (
-	SCHEDULE_WIDTH = 53
-	TEXT_REGEX     = "[a-z ]{1,26}"
+	// ScheduleWidth is the width of the schedule
+	ScheduleWidth = 53
+	// TextRegex is the regular expression used to check the given text
+	TextRegex = "[a-z ]{1,26}"
 )
 
 // TextSchedule creates commits over the past 365/366 days to build the given text.
@@ -25,7 +27,9 @@ func TextSchedule(text string, repo git.Git, filegen utils.FileGenerator) error 
 		return err
 	}
 	for _, commit := range commits {
-		repo.Add(filegen.CreateFile())
+		// TODO error handling
+		f, _ := filegen.CreateFile()
+		repo.Add(f)
 		repo.Commit(commit.Message, commit.DateTime.String())
 	}
 	return err
@@ -51,11 +55,11 @@ func parseStringForTranslation(text string) string {
 
 // checkText checks wether or not the text will fit onto a CommitSchedule.
 func checkText(text string) error {
-	if matched, _ := regexp.MatchString(TEXT_REGEX, text); !matched {
+	if matched, _ := regexp.MatchString(TextRegex, text); !matched {
 		return errors.New("Text can only contain letters and spaces (not only spaces).")
 	}
 	textWidth := getTextWidth(text)
-	textIsNotToWide := textWidth <= SCHEDULE_WIDTH-2 // adjust for margins
+	textIsNotToWide := textWidth <= ScheduleWidth-2 // adjust for margins
 	textIsNotEmpty := textWidth > 0
 	if !(textIsNotEmpty && textIsNotToWide) {
 		return errors.New("Text does not fit.")
